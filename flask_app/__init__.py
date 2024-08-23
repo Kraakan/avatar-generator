@@ -50,7 +50,7 @@ def create_app(test_config=None):
         await img_gen.initialize_pipe()
         img_gen.select_image(initial_image, image_folder="static/users/" + username)
         image_name = await img_gen.flask_generate()
-        return "<img src='flask_app/" + {{Flask.url_for('static', filename= "users/" + username "/output/" + image_name) }} + "'>"
+        return "<img src='flask_app/" + {{Flask.url_for('static', filename= "users/" + username + "/output/" + image_name) }} + "'>"
     
     @app.route('/<username>/train')
     async def train(username):
