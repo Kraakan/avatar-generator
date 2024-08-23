@@ -1,3 +1,5 @@
+# User files
+flask_app/Users
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
