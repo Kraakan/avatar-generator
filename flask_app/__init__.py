@@ -4,7 +4,7 @@ import getpass
 from flask import Flask
 from flask import request
 
-import img_gen
+from DreamBooth import img_gen
 
 def create_app(test_config=None):
     # create and configure the app
