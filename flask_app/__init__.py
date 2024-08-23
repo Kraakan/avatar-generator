@@ -4,7 +4,7 @@ import getpass
 from flask import Flask
 from flask import request
 
-from flask_app.DreamBooth import img_gen
+import flask_app.DreamBooth as DreamBooth
 
 def create_app(test_config=None):
     # create and configure the app
@@ -38,18 +38,18 @@ def create_app(test_config=None):
 
     @app.route('/kraakan')
     async def kraakan():
-        return await img_gen.initialize_pipe()
+        return await DreamBooth.img_gen.initialize_pipe()
 
     @app.route('/<username>')
     def menu(username):
-        return img_gen.display_images(username)
+        return DreamBooth.img_gen.display_images(username)
 
     @app.route('/<username>/generate')
     async def generate(username):
         initial_image = request.args.get('initimg')
-        await img_gen.initialize_pipe()
-        img_gen.select_image(initial_image, image_folder="static/users/" + username)
-        image_name = await img_gen.flask_generate()
+        await DreamBooth.img_gen.initialize_pipe()
+        DreamBooth.img_gen.select_image(initial_image, image_folder="static/users/" + username)
+        image_name = await DreamBooth.img_gen.flask_generate()
         return "<img src='flask_app/" + {{Flask.url_for('static', filename= "users/" + username + "/output/" + image_name) }} + "'>"
     
     @app.route('/<username>/train')
