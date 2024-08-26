@@ -4,7 +4,8 @@ import getpass
 from flask import Flask
 from flask import request
 
-import flask_app.DreamBooth as DreamBooth
+import DreamBooth
+from image_generation import img_gen
 
 def create_app(test_config=None):
     # create and configure the app
@@ -38,23 +39,23 @@ def create_app(test_config=None):
 
     @app.route('/kraakan')
     async def kraakan():
-        return await DreamBooth.img_gen.initialize_pipe()
+        return await img_gen.initialize_pipe()
 
     @app.route('/<username>')
     def menu(username):
-        return DreamBooth.img_gen.display_images(username)
+        return img_gen.display_images(username)
 
     @app.route('/<username>/generate')
     async def generate(username):
         initial_image = request.args.get('initimg')
-        await DreamBooth.img_gen.initialize_pipe()
-        DreamBooth.img_gen.select_image(initial_image, image_folder="static/users/" + username)
-        image_name = await DreamBooth.img_gen.flask_generate()
+        await img_gen.initialize_pipe()
+        img_gen.select_image(initial_image, image_folder="static/users/" + username)
+        image_name = await img_gen.flask_generate()
         return "<img src='flask_app/" + {{Flask.url_for('static', filename= "users/" + username + "/output/" + image_name) }} + "'>"
     
     @app.route('/<username>/train')
     async def train(username):
-        from flask_app.DreamBooth.accelerate_dreambooth import get_config, launch_training
+        from DreamBooth.accelerate_dreambooth import get_config, launch_training
         namespace = get_config(username)
         await launch_training(namespace)
         return "Training run?"
