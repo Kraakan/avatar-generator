@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <h1>Hello, {{ user.username }}!</h1>
+        {% for image in images %}
+        <div>
+            <img src={{ image.url }}>
+        </div>
+        {% endfor %}
+{% endblock %}

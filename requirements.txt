@@ -1,0 +1,17 @@
+python-dotenv
+torch
+diffusers
+transformers
+accelerate>=0.16.0
+torchvision
+transformers>=4.25.1
+ftfy
+tensorboard
+Jinja2
+peft==0.7.0
+huggingface_hub
+flask
+flask[async]
+flask-login
+flask-wtf
+email-validator
