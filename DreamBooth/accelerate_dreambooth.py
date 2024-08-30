@@ -1,18 +1,21 @@
 from accelerate.commands import launch
 import argparse
 import json
+import os
 
-def create_config(username):
+def create_config(user):
     pass
 
-def get_config(username):
-    dir_path = "users/"
+def get_config(user):
+    dir_path = "/users/"
+    print(dir_path + user + '.json')
+    print(os.path.dirname(__file__))
     try:
-        with open(dir_path + username + '.json') as f: # TODO: add correct file structure
+        with open(os.path.dirname(__file__) + dir_path + user + '.json') as f: # TODO: add correct file structure
             launch_args = json.load(f)      # (it might be different depending on server)
     except FileNotFoundError:
         print(FileNotFoundError)
-        launch_args = create_config(username)
+        launch_args = create_config(user)
 
     # model_name = "runwayml/stable-diffusion-v1-5" # "pretrained_model_name_or_path":$MODEL_NAME,
     # instance_dir = "./kraakan" # "instance_data_dir":$INSTANCE_DIR,

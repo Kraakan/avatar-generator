@@ -12,8 +12,6 @@ from flask_app import db, login, app
 def load_user(id):
     return db.session.get(User, int(id))
 
-
-
 class User(UserMixin, db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True,
@@ -23,10 +21,12 @@ class User(UserMixin, db.Model):
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     visibility: so.Mapped[int] = so.mapped_column(default=0) # 0=visible to admin, 1=visible to confirmed users, 2=visible to anyone
     avatar: so.Mapped[int] = so.mapped_column(default=0)
-    models: so.WriteOnlyMapped['Model'] = so.relationship(
+    models: so.Mapped['Model'] = so.relationship(
         back_populates='owner')
     pictures: so.Mapped['Generated_image'] = so.relationship(
         back_populates='owner')
+    tuning_images: so.WriteOnlyMapped[list['Tuning_image']] = so.relationship(
+        back_populates='owner',)
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
@@ -47,7 +47,7 @@ class Model(db.Model):
     fine_tuning_promt: so.Mapped[str] = so.mapped_column(sa.String(64))
     owner: so.Mapped['User'] = so.relationship(
         back_populates='models')
-    generated_images: so.WriteOnlyMapped['Generated_image'] = so.relationship(
+    generated_images: so.Mapped['Generated_image'] = so.relationship(
         back_populates='model')
     #tuning_images_used: so.Mapped['Tuning_image'] = so.relationship(back_populates='used_in_model')
     def __repr__(self):
@@ -78,6 +78,8 @@ class Tuning_image(db.Model):
         index=True, default=lambda: datetime.now())
     filename: so.Mapped[str] = so.mapped_column(sa.String(64), unique=True)
     #used_in_model: so.WriteOnlyMapped['Model'] = so.relationship(back_populates='tuning_images_used')
+    owner: so.Mapped[list['User']] = so.relationship(
+        back_populates='tuning_images')
     def __repr__(self):
         return '{}'.format(self.filename)
     

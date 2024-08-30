@@ -1,6 +1,7 @@
 # Following tutorial by Miguel Grinberg
 # https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iii-web-forms
 from flask_wtf import FlaskForm
+from flask_wtf.file import MultipleFileField, FileAllowed, FileRequired
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import sqlalchemy as sa
@@ -34,3 +35,8 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
         
+class TuningImageForm(FlaskForm):
+    photos = MultipleFileField(validators=[
+        FileRequired(),
+        FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
+    submit = SubmitField('Upload')

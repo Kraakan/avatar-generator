@@ -1,5 +1,9 @@
 # User files
 flask_app/app.db
+DreamBooth/users
+DreamBooth/models
+DreamBooth/kraakan_modell
+image_generation/kraakan_modell_3
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

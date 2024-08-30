@@ -4,8 +4,6 @@ import flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
-
-
 # create and configure the app
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -18,6 +16,7 @@ login.login_view = 'login'
 try:
     os.makedirs(app.instance_path)
 except OSError:
+    print("Didn't makedir")
     pass
 
 app.config.from_mapping(
