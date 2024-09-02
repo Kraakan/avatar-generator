@@ -2,7 +2,7 @@
 # https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iii-web-forms
 from flask_wtf import FlaskForm
 from flask_wtf.file import MultipleFileField, FileAllowed, FileRequired
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField, SelectMultipleField, widgets
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import sqlalchemy as sa
 
@@ -40,3 +40,31 @@ class TuningImageForm(FlaskForm):
         FileRequired(),
         FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
     submit = SubmitField('Upload')
+
+class ImageGenerationForm(FlaskForm):
+    model_list =  []
+    def populate_models(self, models):
+        self.model_list += models
+    
+    models = SelectField('Model', model_list)
+    promt = TextAreaField('Prompt', validators=[DataRequired()])
+    submit = SubmitField('Generate')
+
+class MultiCheckboxField(SelectMultipleField):
+    """
+    A multiple-select, except displays a list of checkboxes.
+
+    Iterating the field will produce subfields, allowing custom rendering of
+    the enclosed checkbox fields.
+    """
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+class TuningForm(FlaskForm):
+    model_list =  []
+    def populate_models(self, models):
+        self.model_list += models
+    models = SelectField('Model', model_list)
+    tuning_images = MultiCheckboxField('Select images to tune to', validators=[DataRequired()])
+    tuning_promt = TextAreaField('Prompt for this tuning', validators=[DataRequired()])
+    submit = SubmitField('Tune')

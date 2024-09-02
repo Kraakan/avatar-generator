@@ -3,7 +3,7 @@ import flask
 from flask_login import current_user, login_user, logout_user, login_required
 import flask_app
 from flask_app import app, db
-from flask_app.forms import LoginForm, RegistrationForm, TuningImageForm
+from flask_app.forms import LoginForm, RegistrationForm, TuningImageForm, ImageGenerationForm, TuningForm
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
 from werkzeug.utils import secure_filename
@@ -68,10 +68,18 @@ def user():
     generated_images = db.session.scalars(sa.select(flask_app.models.Generated_image).where(flask_app.models.Generated_image.user_id == current_user.get_id()))
     return flask.render_template('user.html', user=user, models=models, tuning_images=tuning_images, generated_images=generated_images)
 
-@app.route('/user/generate', methods=['POST'])
+@app.route('/user/generate', methods=['GET','POST'])
 @login_required
 def generate():
-    return flask.request.form
+    form = ImageGenerationForm()
+    if form.validate_on_submit():
+        #need user?
+        print(current_user)
+        model_selection = form.models.data
+        model = db.session.scalar(sa.select(flask_app.models.Model).where(flask_app.models.Model.id == model_selection)) # Assuming the form will have the model id's
+        promt = model.fine_tuning_promt + " " + form.promt.data
+        return print(model_selection, promt)
+    return flask.render_template('generate.html', form=form)
 """
 async def generate(model):
     initial_image = flask.request.args.get('initimg')
@@ -80,14 +88,17 @@ async def generate(model):
     image_name = await img_gen.flask_generate()
     return "<img src='flask_app/" + {{flask.Flask.url_for('static', filename= "users/" + username + "/output/" + image_name) }}""" + "'>"
 
-@app.route('/user/train', methods=['GET'])
+@app.route('/user/tune', methods=['GET'])
 @login_required
-async def train():
-    from DreamBooth.accelerate_dreambooth import get_config, launch_training
-    user = current_user.get_id()
-    namespace = get_config(user)
-    await launch_training(namespace)
-    return "Training run?"
+async def tune():
+    form = TuningForm()
+    available_images = db.session.scalars(sa.select(flask_app.models.Tuning_image).where(flask_app.models.Tuning_image.user_id == current_user.get_id()))
+    if form.validate_on_submit():
+        from DreamBooth.accelerate_dreambooth import get_config, launch_training
+        user = current_user.get_id()
+        namespace = get_config(user)
+        await launch_training(namespace)
+    return flask.render_template('tune.html', form=form, available_tuning_images=available_images)
 
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required

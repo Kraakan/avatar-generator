@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% if current_user.is_authenticated %}
+  Hi {{ current_user.name }}!
+{% endif %}
+{% block content %}
+
+{% if available_tuning_images %}
+    <fieldset>
+        <p>{{ form.tuning_images.label}}</p>
+    {% for image in available_tuning_images %}
+        <div>
+            <img src={{ url_for('static', filename= image.filename ) }}>
+            {{ form.tuning_images.option_widget }}
+            
+        </div>
+    {% endfor %}
+    </fieldset>
+{% endif %}
+<p>{{ form.submit() }}</p>
+{% endblock %}
