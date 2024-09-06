@@ -25,7 +25,7 @@ device = "cuda"
 
 # Slotting in DreamBooth output
 DreamBooth_instance_prompt="kraakan"
-model_id_or_path = "./DreamBooth/users/kraakan_modell"
+model_id_or_path = "./DreamBooth/kraakan_modell"
 
 async def initialize_pipe():
     global pipe

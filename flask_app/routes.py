@@ -71,14 +71,25 @@ def user():
 @app.route('/user/generate', methods=['GET','POST'])
 @login_required
 def generate():
+    # List models
+    # Base model + user generated
+    model_list = [(-1, "Base model")]
+    user_id = current_user.get_id()
+    user_models = db.session.scalars(sa.select(flask_app.models.Model).where(flask_app.models.Model.user_id == user_id))
+    for m in user_models:
+        model_list.append((m.id, m.name))
     form = ImageGenerationForm()
+    form.models.choices = model_list
     if form.validate_on_submit():
         #need user?
         print(current_user)
         model_selection = form.models.data
-        model = db.session.scalar(sa.select(flask_app.models.Model).where(flask_app.models.Model.id == model_selection)) # Assuming the form will have the model id's
-        promt = model.fine_tuning_promt + " " + form.promt.data
-        return print(model_selection, promt)
+        promt = form.promt.data
+        print(model_selection, promt)
+        if int(model_selection) != -1:
+            model = db.session.scalar(sa.select(flask_app.models.Model).where(flask_app.models.Model.id == model_selection)) # Assuming the form will have the model id's
+            promt = model.fine_tuning_promt + " " + promt
+        return model_selection, promt
     return flask.render_template('generate.html', form=form)
 """
 async def generate(model):
@@ -88,17 +99,33 @@ async def generate(model):
     image_name = await img_gen.flask_generate()
     return "<img src='flask_app/" + {{flask.Flask.url_for('static', filename= "users/" + username + "/output/" + image_name) }}""" + "'>"
 
-@app.route('/user/tune', methods=['GET'])
+@app.route('/user/tune', methods=['GET', 'POST'])
 @login_required
 async def tune():
-    form = TuningForm()
     available_images = db.session.scalars(sa.select(flask_app.models.Tuning_image).where(flask_app.models.Tuning_image.user_id == current_user.get_id()))
+    form = TuningForm()
+    form.tuning_images.choices = [(i.id, i.filename) for i in available_images]
+    if form.tuning_images.data:
+        print(form.tuning_images.data)
+    else:
+        print(form.tuning_images)
+        print("What's this?")
     if form.validate_on_submit():
+        image_id_strings = [str(i) for i in form.tuning_images.data]
+        selected_images = db.session.query(flask_app.models.Tuning_image).filter(flask_app.models.Tuning_image.id.in_(image_id_strings)).all()
+        #scalars(sa.select(flask_app.models.Tuning_image).where( flask_app.models.Tuning_image.id in image_id_strings))
+        print(selected_images)
+        image_filenames = [i.filename for i in selected_images]
+        print(image_filenames)
         from DreamBooth.accelerate_dreambooth import get_config, launch_training
         user = current_user.get_id()
-        namespace = get_config(user)
-        await launch_training(namespace)
-    return flask.render_template('tune.html', form=form, available_tuning_images=available_images)
+        all_models = db.session.query(flask_app.models.Model).all()
+        new_model_dir = "./models/" + str(len(all_models))
+        namespace = get_config(user, image_filenames, new_model_dir)
+        model_data = await launch_training(namespace)
+        model_data["dir"] = new_model_dir
+        return model_data
+    return flask.render_template('tune.html', form=form)
 
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
@@ -108,8 +135,8 @@ def upload():
     if form.validate_on_submit():
         for f in form.photos.data:  # form.photo.data return a list of FileStorage object
             filename = secure_filename(f.filename)
-            extension = '.' + filename.split('.')[1]
-            tuning_image = flask_app.models.Tuning_image(user_id=current_user.id, filename=str(datetime.datetime.now()) + extension)
+            extension = '.' + filename.split('.')[1] #''.join(sentence.split())
+            tuning_image = flask_app.models.Tuning_image(user_id=current_user.id, filename=''.join(str(datetime.datetime.now()).split()) + extension)
             print(tuning_image.filename)
             f.save(os.path.join(
                 basedir, 'static', tuning_image.filename

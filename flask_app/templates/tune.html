@@ -4,17 +4,22 @@
 {% endif %}
 {% block content %}
 
-{% if available_tuning_images %}
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
     <fieldset>
+        {% if form.tuning_images.errors %}
+            {% for error in form.tuning_images.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        {% endif %}
         <p>{{ form.tuning_images.label}}</p>
-    {% for image in available_tuning_images %}
-        <div>
-            <img src={{ url_for('static', filename= image.filename ) }}>
-            {{ form.tuning_images.option_widget }}
-            
-        </div>
-    {% endfor %}
+        {% for image in form.tuning_images %}
+            <div>
+                <img src={{ url_for('static', filename= image.label.text ) }} height="300">
+                {{ image() }}
+            </div>
+        {% endfor %}
     </fieldset>
-{% endif %}
-<p>{{ form.submit() }}</p>
+    <p>{{ form.submit() }}</p>
+</form>
 {% endblock %}

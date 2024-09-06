@@ -3,10 +3,13 @@ import argparse
 import json
 import os
 
+# TODO: pass arguments
+
 def create_config(user):
     pass
 
-def get_config(user):
+def get_config(user, image_list, new_model_dir):
+    image_string = '#'.join(image_list)
     dir_path = "/users/"
     print(dir_path + user + '.json')
     print(os.path.dirname(__file__))
@@ -16,6 +19,9 @@ def get_config(user):
     except FileNotFoundError:
         print(FileNotFoundError)
         launch_args = create_config(user)
+
+    launch_args["instance_image_list"] = image_string
+    launch_args["output_dir"]= new_model_dir
 
     # model_name = "runwayml/stable-diffusion-v1-5" # "pretrained_model_name_or_path":$MODEL_NAME,
     # instance_dir = "./kraakan" # "instance_data_dir":$INSTANCE_DIR,
@@ -33,7 +39,7 @@ def get_config(user):
     parser = launch.launch_command_parser()
 
 
-    arg_list = ["train_dreambooth.py"]
+    arg_list = ["DreamBooth/train_dreambooth.py"]
     #arg_list = []
 
     default_args = vars(parser.parse_args(args = arg_list))
@@ -51,3 +57,9 @@ def get_config(user):
 
 def launch_training(namespace):
     launch.launch_command(namespace)
+    # On successful training, return data for the database
+    model_data = {
+        "instance_prompt": namespace.instance_prompt,
+        "output_dir": namespace.output_dir
+    }
+    return model_data

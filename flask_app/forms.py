@@ -42,12 +42,8 @@ class TuningImageForm(FlaskForm):
     submit = SubmitField('Upload')
 
 class ImageGenerationForm(FlaskForm):
-    model_list =  []
-    def populate_models(self, models):
-        self.model_list += models
-    
-    models = SelectField('Model', model_list)
-    promt = TextAreaField('Prompt', validators=[DataRequired()])
+    models = SelectField('Model')
+    promt = TextAreaField('Prompt')
     submit = SubmitField('Generate')
 
 class MultiCheckboxField(SelectMultipleField):
@@ -61,10 +57,10 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 class TuningForm(FlaskForm):
-    model_list =  []
-    def populate_models(self, models):
-        self.model_list += models
-    models = SelectField('Model', model_list)
-    tuning_images = MultiCheckboxField('Select images to tune to', validators=[DataRequired()])
-    tuning_promt = TextAreaField('Prompt for this tuning', validators=[DataRequired()])
+    #model_list =  []
+    #def populate_models(self, models):
+    #    self.model_list += models
+    #models = SelectField('Model', model_list)
+    tuning_images = MultiCheckboxField('Select images to tune to', coerce=int)
+    tuning_promt = TextAreaField('Prompt for this tuning')
     submit = SubmitField('Tune')

@@ -257,11 +257,11 @@ def parse_args(input_args=None):
         help="Pretrained tokenizer name or path if not the same as model_name",
     )
     parser.add_argument(
-        "--instance_data_dir",
+        "--instance_image_list",
         type=str,
         default=None,
         required=True,
-        help="A folder containing the training data of instance images.",
+        help="A list of pathnames for instance images.",
     )
     parser.add_argument(
         "--class_data_dir",
@@ -634,12 +634,12 @@ class DreamBoothDataset(Dataset):
         self.class_prompt_encoder_hidden_states = class_prompt_encoder_hidden_states
         self.tokenizer_max_length = tokenizer_max_length
 
-        self.instance_data_root = Path(instance_data_root)
+        """self.instance_data_root = Path(instance_data_root)
         if not self.instance_data_root.exists():
-            raise ValueError(f"Instance {self.instance_data_root} images root doesn't exists.")
+            raise ValueError(f"Instance {self.instance_data_root} images root doesn't exists.")"""
+        self.instance_images_path = list(instance_data_root.split('#')) # TODO: modify to recieve list of image paths
 
-        self.instance_images_path = list(Path(instance_data_root).iterdir())
-        self.num_instance_images = len(self.instance_images_path)
+        self.num_instance_images = len(self.instance_images_path) # TODO: modify to recieve list of image paths
         self.instance_prompt = instance_prompt
         self._length = self.num_instance_images
 
@@ -670,7 +670,9 @@ class DreamBoothDataset(Dataset):
 
     def __getitem__(self, index):
         example = {}
-        instance_image = Image.open(self.instance_images_path[index % self.num_instance_images])
+        instance_image_path = os.path.join(os.getcwd(), "../avatar-generator/flask_app/static" ,self.instance_images_path[index % self.num_instance_images])
+        instance_image_path = os.path.abspath(instance_image_path)
+        instance_image = Image.open(instance_image_path) # TODO: modify to recieve list of image paths
         instance_image = exif_transpose(instance_image)
 
         if not instance_image.mode == "RGB":
@@ -1092,7 +1094,7 @@ def main(args):
 
     # Dataset and DataLoaders creation:
     train_dataset = DreamBoothDataset(
-        instance_data_root=args.instance_data_dir,
+        instance_data_root=args.instance_image_list,
         instance_prompt=args.instance_prompt,
         class_data_root=args.class_data_dir if args.with_prior_preservation else None,
         class_prompt=args.class_prompt,

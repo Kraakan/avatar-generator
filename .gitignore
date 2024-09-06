@@ -3,6 +3,7 @@ flask_app/app.db
 flask_app/static
 DreamBooth/users
 DreamBooth/models
+models
 DreamBooth/kraakan_modell
 image_generation/kraakan_modell_3
 # Byte-compiled / optimized / DLL files
