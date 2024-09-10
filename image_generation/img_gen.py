@@ -53,14 +53,20 @@ def select_image(initial_image, image_folder):
 
     image_path = "flask_app/" + image_folder + "/" + initial_image
 
+    image_path = 'Nathan_Explosion.png' # TODO: init image selection
+
     init_image = Image.open(image_path).convert("RGB")
 
     init_image = init_image.resize((768, 512))
 
-async def flask_generate():
-    prompt = DreamBooth_instance_prompt + " person"
+
+async def flask_generate(model = "./DreamBooth/kraakan_modell", prompt = "kraakan person"):
+    init_image = Image.open('Nathan_Explosion.png').convert("RGB")
+    init_image = init_image.resize((768, 512))
+    initial_image_name = "Nathan_Explosion"
+
     images = pipe(prompt=prompt, image=init_image, strength=0.75, guidance_scale=7.5).images
-    image_name =str(datetime.datetime.now()) + "_" + prompt + "_" + initial_image_name + ".png"
+    image_name ='_'.join(str(datetime.datetime.now()).split()) + "_" + '_'.join(prompt.split()) + "_" + initial_image_name + ".png"
     images[0].save("flask_app/static/output/" + image_name) #Not saving?
     return image_name
 

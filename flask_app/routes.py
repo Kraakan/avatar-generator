@@ -70,26 +70,31 @@ def user():
 
 @app.route('/user/generate', methods=['GET','POST'])
 @login_required
-def generate():
+async def generate():
     # List models
     # Base model + user generated
     model_list = [(-1, "Base model")]
     user_id = current_user.get_id()
-    user_models = db.session.scalars(sa.select(flask_app.models.Model).where(flask_app.models.Model.user_id == user_id))
-    for m in user_models:
-        model_list.append((m.id, m.name))
+    user_models = db.session.scalars(sa.select(flask_app.models.Model).where(flask_app.models.Model.user_id == int(user_id)))
+    #all_user_models = db.session.query(flask_app.models.Model)
+    #print(type(all_user_models.all()[0].user_id), type(user_id))
+    #print(all_user_models.all()[0].user_id == int(user_id))
+    model_list += [(m.id, m.name) for m in user_models]
+    print(model_list)
     form = ImageGenerationForm()
     form.models.choices = model_list
     if form.validate_on_submit():
+        await img_gen.initialize_pipe() # Too slow?
         #need user?
         print(current_user)
         model_selection = form.models.data
-        promt = form.promt.data
-        print(model_selection, promt)
+        prompt = form.promt.data
         if int(model_selection) != -1:
-            model = db.session.scalar(sa.select(flask_app.models.Model).where(flask_app.models.Model.id == model_selection)) # Assuming the form will have the model id's
-            promt = model.fine_tuning_promt + " " + promt
-        return model_selection, promt
+            model = db.session.scalar(sa.select(flask_app.models.Model).where(flask_app.models.Model.id == int(model_selection))) # Assuming the form will have the model id's
+            prompt = model.fine_tuning_promt + " " + prompt
+            image_name = await img_gen.flask_generate(model = model, prompt = prompt)
+            print(prompt)
+        return image_name
     return flask.render_template('generate.html', form=form)
 """
 async def generate(model):
@@ -119,12 +124,13 @@ async def tune():
         print(image_filenames)
         from DreamBooth.accelerate_dreambooth import get_config, launch_training
         user = current_user.get_id()
+        username = db.session.scalar(sa.select(flask_app.models.User).where(flask_app.models.User.id == user)).username
         all_models = db.session.query(flask_app.models.Model).all()
         new_model_dir = "./models/" + str(len(all_models))
-        namespace = get_config(user, image_filenames, new_model_dir)
-        model_data = await launch_training(namespace)
-        model_data["dir"] = new_model_dir
-        return model_data
+        namespace = get_config(user, image_filenames, new_model_dir, prompt=username)
+        launch_training(namespace, user, new_model_dir, prompt=username)
+        #model_data["dir"] = new_model_dir
+        #return model_data
     return flask.render_template('tune.html', form=form)
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -146,3 +152,8 @@ def upload():
         return flask.redirect(flask.url_for('index'))
 
     return flask.render_template('upload.html', form=form)
+
+@app.route('/progress', methods=['GET'])
+@login_required
+def progress():
+    return "Work in progress!"

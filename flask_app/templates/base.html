@@ -29,6 +29,8 @@ https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates -
         </ul>
         {% endif %}
         {% endwith %}
+        <script src="{{url_for('static', filename='jobs.js')}}"></script>
+
         {% block content %}{% endblock %}
     </body>
 </html>

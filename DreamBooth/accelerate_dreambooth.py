@@ -8,7 +8,7 @@ import os
 def create_config(user):
     pass
 
-def get_config(user, image_list, new_model_dir):
+def get_config(user, image_list, new_model_dir, prompt = None):
     image_string = '#'.join(image_list)
     dir_path = "/users/"
     print(dir_path + user + '.json')
@@ -22,6 +22,9 @@ def get_config(user, image_list, new_model_dir):
 
     launch_args["instance_image_list"] = image_string
     launch_args["output_dir"]= new_model_dir
+
+    if prompt is not None:
+        launch_args["instance_prompt"] = prompt
 
     # model_name = "runwayml/stable-diffusion-v1-5" # "pretrained_model_name_or_path":$MODEL_NAME,
     # instance_dir = "./kraakan" # "instance_data_dir":$INSTANCE_DIR,
@@ -55,11 +58,17 @@ def get_config(user, image_list, new_model_dir):
     namespace = parser.parse_args(args = arg_list)
     return namespace
 
-def launch_training(namespace):
+def launch_training(namespace, user, new_model_dir, prompt = "Placeholder prompt"):
     launch.launch_command(namespace)
     # On successful training, return data for the database
     model_data = {
         "instance_prompt": namespace.instance_prompt,
         "output_dir": namespace.output_dir
     }
+    from flask_app import app, db, models
+    print(vars(namespace))
+    new_model = models.Model(name="Placeholder Name", dir=new_model_dir, user_id=user, fine_tuning_promt=prompt)
+    print(new_model)
+    db.session.add(new_model)
+    db.session.commit()
     return model_data
