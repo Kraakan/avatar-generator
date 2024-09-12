@@ -6,26 +6,26 @@
         {% if tuning_images %}
             {% for image in tuning_images %}
             <div>
-                <img src={{ url_for('static', filename= image.filename ) }}>
+                <img src={{ url_for('static', filename= image.filename ) }} height="300">
             </div>
             {% endfor %}
         {% endif %}
 
         {% if generated_images %}
-            {% for image in user.generated_images %}
+        <h1>Generated:</h1>
+            {% for image in generated_images %}
             <div>
-                <img src={{ url_for('static', filename= image.filename ) }}>
+                <img src={{ url_for('static', filename= 'output/' + image.filename ) }} height="300">
             </div>
             {% endfor %}
         {% endif %}
-
 
             <!--  Get base models -->
         {% if models %}
             {% for model in models %}
             <h2>Generate an image</h2>
             <div>
-                <form method="post" action="{{ url_for('user/generate') }}" class="inline">
+                <form method="post" action="{{ url_for('generate') }}" class="inline">
                     <input type="hidden" name="model_id" value='{{model.id}}'>
                     <button type="submit" name="generate_image" value="submit_value">
                     </button>

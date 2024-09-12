@@ -62,13 +62,12 @@ def launch_training(namespace, user, new_model_dir, prompt = "Placeholder prompt
     launch.launch_command(namespace)
     # On successful training, return data for the database
     model_data = {
-        "instance_prompt": namespace.instance_prompt,
-        "output_dir": namespace.output_dir
+        "instance_prompt": prompt,
+        "output_dir": new_model_dir
     }
     from flask_app import app, db, models
     print(vars(namespace))
-    new_model = models.Model(name="Placeholder Name", dir=new_model_dir, user_id=user, fine_tuning_promt=prompt)
-    print(new_model)
-    db.session.add(new_model)
+    new_model_entry = models.Model(name="Placeholder Name", dir=new_model_dir, user_id=user, fine_tuning_promt=prompt)
+    db.session.add(new_model_entry)
     db.session.commit()
     return model_data

@@ -14,12 +14,13 @@ import datetime
 
 import asyncio
 
+import os
 from os import listdir
 from os.path import isfile, join
 
 import flask
 
-device = "cuda"
+
 
 # model_id_or_path = "runwayml/stable-diffusion-v1-5"
 
@@ -27,11 +28,11 @@ device = "cuda"
 DreamBooth_instance_prompt="kraakan"
 model_id_or_path = "./DreamBooth/kraakan_modell"
 
-async def initialize_pipe():
-    global pipe
+def initialize_pipe(model_id_or_path = "./DreamBooth/models/default"):
+    device = "cuda"
     pipe = StableDiffusionImg2ImgPipeline.from_pretrained(model_id_or_path, torch_dtype=torch.float16, safety_checker = None)
     pipe = pipe.to(device)
-    return "<p>Stable diffusion pipeline initialized.</p>"
+    return pipe
     
 def display_images(username):
     image_folder = "flask_app/static/users/" + username
@@ -60,14 +61,27 @@ def select_image(initial_image, image_folder):
     init_image = init_image.resize((768, 512))
 
 
-async def flask_generate(model = "./DreamBooth/kraakan_modell", prompt = "kraakan person"):
-    init_image = Image.open('Nathan_Explosion.png').convert("RGB")
+def flask_generate(model = None, initial_image_name = "Nathan_Explosion.png", prompt = "kraakan person"):
+    from flask_app import app, db, models
+    model_path = model.dir or None
+    pipe = initialize_pipe(model_id_or_path = model_path)
+    input_dir = os.path.join(os.getcwd(), "../avatar-generator/flask_app/static/input/")
+
+    init_image = Image.open(input_dir + initial_image_name).convert("RGB")
     init_image = init_image.resize((768, 512))
-    initial_image_name = "Nathan_Explosion"
 
     images = pipe(prompt=prompt, image=init_image, strength=0.75, guidance_scale=7.5).images
+
+    initial_image_name = initial_image_name.split(".")[0]
     image_name ='_'.join(str(datetime.datetime.now()).split()) + "_" + '_'.join(prompt.split()) + "_" + initial_image_name + ".png"
     images[0].save("flask_app/static/output/" + image_name) #Not saving?
+
+    #print("Entry:", "user_id =", model.user_id, "model_id =", model.id, "promt =", prompt, "filename =", image_name)
+    new_image_entry = models.Generated_image(user_id = model.user_id, model_id = model.id, promt = prompt, filename = image_name)
+    print(new_image_entry)
+    db.session.add(new_image_entry)
+    db.session.commit()
+    
     return image_name
 
 def enter_promt():

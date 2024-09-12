@@ -84,7 +84,6 @@ async def generate():
     form = ImageGenerationForm()
     form.models.choices = model_list
     if form.validate_on_submit():
-        await img_gen.initialize_pipe() # Too slow?
         #need user?
         print(current_user)
         model_selection = form.models.data
@@ -92,17 +91,12 @@ async def generate():
         if int(model_selection) != -1:
             model = db.session.scalar(sa.select(flask_app.models.Model).where(flask_app.models.Model.id == int(model_selection))) # Assuming the form will have the model id's
             prompt = model.fine_tuning_promt + " " + prompt
-            image_name = await img_gen.flask_generate(model = model, prompt = prompt)
+            img_gen.flask_generate(model = model, prompt = prompt)
             print(prompt)
-        return image_name
+        else: # Allow generation with untuned model?
+            pass
+        return flask.render_template('tasks.html')
     return flask.render_template('generate.html', form=form)
-"""
-async def generate(model):
-    initial_image = flask.request.args.get('initimg')
-    await img_gen.initialize_pipe()
-    img_gen.select_image(initial_image, image_folder="static/users/" + username)
-    image_name = await img_gen.flask_generate()
-    return "<img src='flask_app/" + {{flask.Flask.url_for('static', filename= "users/" + username + "/output/" + image_name) }}""" + "'>"
 
 @app.route('/user/tune', methods=['GET', 'POST'])
 @login_required
@@ -133,6 +127,11 @@ async def tune():
         #return model_data
     return flask.render_template('tune.html', form=form)
 
+@app.route('/user/tasks', methods=['GET'])
+@login_required
+def tasks(): # TODO: Create reverse-chronological list of tasks (including pending ones?)
+    return flask.render_template('tasks.html')
+
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
@@ -152,8 +151,3 @@ def upload():
         return flask.redirect(flask.url_for('index'))
 
     return flask.render_template('upload.html', form=form)
-
-@app.route('/progress', methods=['GET'])
-@login_required
-def progress():
-    return "Work in progress!"

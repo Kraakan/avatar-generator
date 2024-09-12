@@ -3,6 +3,8 @@ import getpass
 import flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from celery import Celery
+from celery import Task
 
 # create and configure the app
 basedir = os.path.abspath(os.path.dirname(__file__))
