@@ -3,5 +3,10 @@
 Come back later
 {% block content %}
 <!--  List images and models in reverse chronological order -->
+{% if result  %}
+<span>"ready": {{ result.ready() }}</span>
+<span>"successful": {{ result.successful() }}</span>
+<span>"value": {{ result.result if result.ready() else None }}</span>
+{% endif %}
 {% endblock %}
 {% endif %}

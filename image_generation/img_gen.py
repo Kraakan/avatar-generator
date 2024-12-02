@@ -61,8 +61,11 @@ def select_image(initial_image, image_folder):
     init_image = init_image.resize((768, 512))
 
 
-def flask_generate(model = None, initial_image_name = "Nathan_Explosion.png", prompt = "kraakan person"):
+def flask_generate(model_selection = -1, initial_image_name = "Nathan_Explosion.png", prompt = "kraakan person"):
     from flask_app import app, db, models
+    import sqlalchemy as sa
+    model = db.session.scalar(sa.select(models.Model).where(models.Model.id == model_selection))
+    prompt = model.fine_tuning_promt + " " + prompt
     model_path = model.dir or None
     pipe = initialize_pipe(model_id_or_path = model_path)
     input_dir = os.path.join(os.getcwd(), "../avatar-generator/flask_app/static/input/")
@@ -84,7 +87,7 @@ def flask_generate(model = None, initial_image_name = "Nathan_Explosion.png", pr
     
     return image_name
 
-def enter_promt():
+def enter_promt(): #TODO: Fix or remove
     prompt = DreamBooth_instance_prompt + " " + input("Enter prompt: ")
 
     images = pipe(prompt=prompt, image=init_image, strength=0.75, guidance_scale=7.5).images

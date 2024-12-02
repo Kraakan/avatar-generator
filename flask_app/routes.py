@@ -10,6 +10,8 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import CombinedMultiDict
 from urllib.parse import urlsplit
 
+from celery.result import AsyncResult
+
 import datetime
 
 import DreamBooth
@@ -54,6 +56,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
+        # TODO: Generate .json file in ../DreamBoorth/users 
         flask.flash('Congratulations, you are now a registered user!')
         return flask.redirect(flask.url_for('login'))
     return flask.render_template('register.html', title='Register', form=form)
@@ -68,7 +71,7 @@ def user():
     generated_images = db.session.scalars(sa.select(flask_app.models.Generated_image).where(flask_app.models.Generated_image.user_id == current_user.get_id()))
     return flask.render_template('user.html', user=user, models=models, tuning_images=tuning_images, generated_images=generated_images)
 
-@app.route('/user/generate', methods=['GET','POST'])
+@app.route('/user/generate', methods=['GET','POST']) # Send task to celery, then load a task monitor page
 @login_required
 async def generate():
     # List models
@@ -86,19 +89,18 @@ async def generate():
     if form.validate_on_submit():
         #need user?
         print(current_user)
-        model_selection = form.models.data
+        model_selection = int(form.models.data)
         prompt = form.promt.data
-        if int(model_selection) != -1:
-            model = db.session.scalar(sa.select(flask_app.models.Model).where(flask_app.models.Model.id == int(model_selection))) # Assuming the form will have the model id's
-            prompt = model.fine_tuning_promt + " " + prompt
-            img_gen.flask_generate(model = model, prompt = prompt)
-            print(prompt)
+        if model_selection != -1:
+            result = flask_app.tasks.generate.apply_async(model_selection, prompt)
+            #img_gen.flask_generate(model = model, prompt = prompt)
+            #print(prompt)
         else: # Allow generation with untuned model?
             pass
-        return flask.render_template('tasks.html')
+        return flask.render_template('tasks.html', result = result)
     return flask.render_template('generate.html', form=form)
 
-@app.route('/user/tune', methods=['GET', 'POST'])
+@app.route('/user/tune', methods=['GET', 'POST']) # Send task to celery, then load a task monitor page
 @login_required
 async def tune():
     available_images = db.session.scalars(sa.select(flask_app.models.Tuning_image).where(flask_app.models.Tuning_image.user_id == current_user.get_id()))
@@ -116,15 +118,17 @@ async def tune():
         print(selected_images)
         image_filenames = [i.filename for i in selected_images]
         print(image_filenames)
-        from DreamBooth.accelerate_dreambooth import get_config, launch_training
+        #from DreamBooth.accelerate_dreambooth import get_config, launch_training
         user = current_user.get_id()
         username = db.session.scalar(sa.select(flask_app.models.User).where(flask_app.models.User.id == user)).username
         all_models = db.session.query(flask_app.models.Model).all()
         new_model_dir = "./models/" + str(len(all_models))
-        namespace = get_config(user, image_filenames, new_model_dir, prompt=username)
-        launch_training(namespace, user, new_model_dir, prompt=username)
+        result = flask_app.tasks.tune.apply_async(user, image_filenames, new_model_dir, username)
+        #namespace = get_config(user, image_filenames, new_model_dir, prompt=username)
+        #launch_training(namespace, user, new_model_dir, prompt=username)
         #model_data["dir"] = new_model_dir
         #return model_data
+        return flask.render_template('tasks.html', result = result)
     return flask.render_template('tune.html', form=form)
 
 @app.route('/user/tasks', methods=['GET'])
@@ -151,3 +155,12 @@ def upload():
         return flask.redirect(flask.url_for('index'))
 
     return flask.render_template('upload.html', form=form)
+
+@app.get("/result/<id>")
+def task_result(id: str) -> dict[str, object]:
+    result = AsyncResult(id)
+    return {
+        "ready": result.ready(),
+        "successful": result.successful(),
+        "value": result.result if result.ready() else None,
+    }
