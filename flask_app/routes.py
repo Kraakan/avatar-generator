@@ -10,14 +10,17 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import CombinedMultiDict
 from urllib.parse import urlsplit
 
-from celery.result import AsyncResult
-
 import datetime
 
 import DreamBooth
 from image_generation import img_gen
 
-@app.route('/index')
+class result_object():  # TODO: Make actual result handling
+    def __init__(self):
+        self.ready = "yes"
+        self.successful = False
+
+@app.route('/')
 def index():
     
     return flask.render_template('index.html', title='Home')
@@ -89,18 +92,18 @@ async def generate():
     if form.validate_on_submit():
         #need user?
         print(current_user)
+        result = result_object() # TODO: Make actual result handling
         model_selection = int(form.models.data)
         prompt = form.promt.data
         if model_selection != -1:
-            result = flask_app.tasks.generate.apply_async(model_selection, prompt)
-            #img_gen.flask_generate(model = model, prompt = prompt)
-            #print(prompt)
+            img_gen.flask_generate(model_selection = model_selection, prompt = prompt) # TODO: Consider lanching a subprocess for this!
+            print(prompt)
         else: # Allow generation with untuned model?
             pass
         return flask.render_template('tasks.html', result = result)
     return flask.render_template('generate.html', form=form)
 
-@app.route('/user/tune', methods=['GET', 'POST']) # Send task to celery, then load a task monitor page
+@app.route('/user/tune', methods=['GET', 'POST']) # Launch tuning, then load a task monitor page
 @login_required
 async def tune():
     available_images = db.session.scalars(sa.select(flask_app.models.Tuning_image).where(flask_app.models.Tuning_image.user_id == current_user.get_id()))
@@ -118,17 +121,17 @@ async def tune():
         print(selected_images)
         image_filenames = [i.filename for i in selected_images]
         print(image_filenames)
-        #from DreamBooth.accelerate_dreambooth import get_config, launch_training
+        from DreamBooth.accelerate_dreambooth import get_config, launch_training
         user = current_user.get_id()
         username = db.session.scalar(sa.select(flask_app.models.User).where(flask_app.models.User.id == user)).username
         all_models = db.session.query(flask_app.models.Model).all()
         new_model_dir = "./models/" + str(len(all_models))
-        result = flask_app.tasks.tune.apply_async(user, image_filenames, new_model_dir, username)
-        #namespace = get_config(user, image_filenames, new_model_dir, prompt=username)
-        #launch_training(namespace, user, new_model_dir, prompt=username)
-        #model_data["dir"] = new_model_dir
-        #return model_data
-        return flask.render_template('tasks.html', result = result)
+        #result = flask_app.tasks.tune.apply_async(user, image_filenames, new_model_dir, username)
+        namespace = get_config(user, image_filenames, new_model_dir, prompt=username)
+        model_data = launch_training(namespace, user, new_model_dir, prompt=username)
+        
+        return model_data
+        return flask.render_template('tasks.html')
     return flask.render_template('tune.html', form=form)
 
 @app.route('/user/tasks', methods=['GET'])
@@ -157,10 +160,5 @@ def upload():
     return flask.render_template('upload.html', form=form)
 
 @app.get("/result/<id>")
-def task_result(id: str) -> dict[str, object]:
-    result = AsyncResult(id)
-    return {
-        "ready": result.ready(),
-        "successful": result.successful(),
-        "value": result.result if result.ready() else None,
-    }
+def result(id):
+    return id

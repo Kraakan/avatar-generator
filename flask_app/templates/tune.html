@@ -6,12 +6,20 @@
 
 <form method="POST" action="">
     {{ form.hidden_tag() }}
+    <p>
+        {{ form.name.label }}<br>
+        {{ form.name(size=64) }}<br>
+        {% for error in form.name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
     <fieldset>
         {% if form.tuning_images.errors %}
             {% for error in form.tuning_images.errors %}
                 <span>{{ error }}</span>
             {% endfor %}
         {% endif %}
+
         <p>{{ form.tuning_images.label}}</p>
         {% for image in form.tuning_images %}
             <div>

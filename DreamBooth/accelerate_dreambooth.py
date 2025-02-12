@@ -8,7 +8,7 @@ import os
 def create_config(user):
     pass
 
-def get_config(user, image_list, new_model_dir, prompt = None):
+def get_config(user, image_list, new_model_dir, prompt = None, model_name = None):
     image_string = '#'.join(image_list)
     dir_path = "/users/"
     print(dir_path + user + '.json')
@@ -61,6 +61,7 @@ def get_config(user, image_list, new_model_dir, prompt = None):
 def launch_training(namespace, user, new_model_dir, prompt = "Placeholder prompt"):
     launch.launch_command(namespace)
     # On successful training, return data for the database
+    # Comment above suggests this will wait for subprocesses to complete, I hope that's not true...
     model_data = {
         "instance_prompt": prompt,
         "output_dir": new_model_dir

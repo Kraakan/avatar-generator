@@ -62,5 +62,5 @@ class TuningForm(FlaskForm):
     #    self.model_list += models
     #models = SelectField('Model', model_list)
     tuning_images = MultiCheckboxField('Select images to tune to', coerce=int)
-    tuning_promt = TextAreaField('Prompt for this tuning')
+    name = TextAreaField('Name your model')
     submit = SubmitField('Tune')
