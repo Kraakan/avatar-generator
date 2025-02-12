@@ -3,11 +3,13 @@ import getpass
 import flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_app import task_queue
 
 # create and configure the app
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = flask.Flask(__name__, instance_relative_config=True)
+
 
 login = LoginManager(app)
 login.login_view = 'login'
@@ -31,8 +33,11 @@ db = SQLAlchemy(app)
 
 #app.config.from_pyfile('config.py', silent=True)
 
+# Object that will handle task queue
+queue = task_queue.queue()
+
 @app.shell_context_processor
 def ctx():
-    return {"app": app, "db": db}
+    return {"app": app, "db": db, "queue": queue}
 
 from flask_app import routes, models

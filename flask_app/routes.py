@@ -2,7 +2,7 @@ import os
 import flask
 from flask_login import current_user, login_user, logout_user, login_required
 import flask_app
-from flask_app import app, db
+from flask_app import app, db, queue
 from flask_app.forms import LoginForm, RegistrationForm, TuningImageForm, ImageGenerationForm, TuningForm
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
@@ -100,7 +100,11 @@ async def generate():
             print(prompt)
         else: # Allow generation with untuned model?
             pass
-        return flask.render_template('tasks.html', result = result)
+        if queue.busy:
+            queue.add({"model" : model_selection,
+                       "prompt" : prompt})
+            print("Busy flag read!")
+        return flask.render_template('tasks.html', queue = queue.q)
     return flask.render_template('generate.html', form=form)
 
 @app.route('/user/tune', methods=['GET', 'POST']) # Launch tuning, then load a task monitor page
