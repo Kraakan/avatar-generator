@@ -2,7 +2,7 @@ import os
 import flask
 from flask_login import current_user, login_user, logout_user, login_required
 import flask_app
-from flask_app import app, db, queue
+from flask_app import app, db, models, queue
 from flask_app.forms import LoginForm, RegistrationForm, TuningImageForm, ImageGenerationForm, TuningForm
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
@@ -11,14 +11,33 @@ from werkzeug.datastructures import CombinedMultiDict
 from urllib.parse import urlsplit
 
 import datetime
+import time
+import threading
 
 import DreamBooth
 from image_generation import img_gen
+
+def enter_model(user, new_model_dir, prompt = "Placeholder prompt", name="Placeholder Name"):
+    new_model_entry = models.Model(name=name, dir=new_model_dir, user_id=user, fine_tuning_promt=prompt)
+    db.session.add(new_model_entry)
+    db.session.commit()
 
 class result_object():  # TODO: Make actual result handling
     def __init__(self):
         self.ready = "yes"
         self.successful = False
+
+def check_process(delay=30):
+    status = queue.poll_process()
+    if status != 0:
+        #print(status)
+        time.sleep(delay)
+        check_process()
+    else:
+        #print(status)
+        # Make database entry!
+        task_type, task_key, user, new_model_dir, prompt, name = queue.task_entry(queue.running)
+        enter_model(user, new_model_dir, prompt, name)
 
 @app.route('/')
 def index():
@@ -119,29 +138,35 @@ async def tune():
         print(form.tuning_images)
         print("What's this?")
     if form.validate_on_submit():
+        name = form.name.data
         image_id_strings = [str(i) for i in form.tuning_images.data]
         selected_images = db.session.query(flask_app.models.Tuning_image).filter(flask_app.models.Tuning_image.id.in_(image_id_strings)).all()
         #scalars(sa.select(flask_app.models.Tuning_image).where( flask_app.models.Tuning_image.id in image_id_strings))
         print(selected_images)
         image_filenames = [i.filename for i in selected_images]
         print(image_filenames)
-        from DreamBooth.accelerate_dreambooth import get_config, launch_training
+        from DreamBooth.accelerate_dreambooth import get_command, launch_training
         user = current_user.get_id()
         username = db.session.scalar(sa.select(flask_app.models.User).where(flask_app.models.User.id == user)).username
         all_models = db.session.query(flask_app.models.Model).all()
         new_model_dir = "./models/" + str(len(all_models))
         #result = flask_app.tasks.tune.apply_async(user, image_filenames, new_model_dir, username)
-        namespace = get_config(user, image_filenames, new_model_dir, prompt=username)
-        model_data = launch_training(namespace, user, new_model_dir, prompt=username)
-        
-        return model_data
-        return flask.render_template('tasks.html')
+        command = get_command(user, image_filenames, new_model_dir, prompt=username)
+        queue.queue_task(user, "model tuning", new_model_dir, prompt=username, name=name, command = command)
+        #model_data = launch_training(namespace, user, new_model_dir, prompt=username, name = name) # Old code!
+
+        # Trying to make a polling system to update the database once tuning is finished
+        process_checking_thread = threading.Thread(name="process checker", target=check_process)
+        process_checking_thread.start()
+        return flask.render_template('tasks.html', queue =  queue.q)
     return flask.render_template('tune.html', form=form)
 
 @app.route('/user/tasks', methods=['GET'])
 @login_required
 def tasks(): # TODO: Create reverse-chronological list of tasks (including pending ones?)
-    return flask.render_template('tasks.html')
+    process_status = queue.poll_process()
+    print(process_status)
+    return flask.render_template('tasks.html', queue = queue.q)
 
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required

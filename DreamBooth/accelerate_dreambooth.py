@@ -2,13 +2,14 @@ from accelerate.commands import launch
 import argparse
 import json
 import os
+import subprocess
 
 # TODO: pass arguments
 
 def create_config(user):
     pass
 
-def get_config(user, image_list, new_model_dir, prompt = None, model_name = None):
+def get_command(user, image_list, new_model_dir, prompt = None, model_name = None):
     image_string = '#'.join(image_list)
     dir_path = "/users/"
     print(dir_path + user + '.json')
@@ -55,11 +56,26 @@ def get_config(user, image_list, new_model_dir, prompt = None, model_name = None
         else:
             arg_list.append("--" + key)
 
-    namespace = parser.parse_args(args = arg_list)
-    return namespace
+    #namespace = parser.parse_args(args = arg_list) # Old launch method
+    command = ["python3", "-m", "accelerate.commands.launch"]
+    command = command + arg_list
 
-def launch_training(namespace, user, new_model_dir, prompt = "Placeholder prompt"):
-    launch.launch_command(namespace)
+    return command
+
+def launch_training(namespace, user, new_model_dir, prompt = "Placeholder prompt", name="Placeholder Name"):
+    # Old launch method
+    #launch.launch_command(namespace)
+    command = ["python3", "-m", "accelerate.commands.launch"]
+    #args = ' '.join(namespace)
+    command = command + namespace
+    print(command)
+    #subprocess.run("ls")
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, universal_newlines=True)
+
+    from flask_app import queue
+
+    queue.track_process(process)
+
     # On successful training, return data for the database
     # Comment above suggests this will wait for subprocesses to complete, I hope that's not true...
     model_data = {
@@ -67,8 +83,7 @@ def launch_training(namespace, user, new_model_dir, prompt = "Placeholder prompt
         "output_dir": new_model_dir
     }
     from flask_app import app, db, models
-    print(vars(namespace))
-    new_model_entry = models.Model(name="Placeholder Name", dir=new_model_dir, user_id=user, fine_tuning_promt=prompt)
+    new_model_entry = models.Model(name=name, dir=new_model_dir, user_id=user, fine_tuning_promt=prompt)
     db.session.add(new_model_entry)
     db.session.commit()
     return model_data

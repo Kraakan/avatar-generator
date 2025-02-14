@@ -2,11 +2,22 @@
 {% if current_user.is_authenticated %}
 Come back later
 {% block content %}
-<!--  List images and models in reverse chronological order -->
-{% if result  %}
-<span>"ready": {{ result.ready }}</span>
-<span>"successful": {{ result.successful }}</span>
-<span>"value": {{ result.result if result.ready else None }}</span>
+<!--  {
+            "user" : self.user,
+            "type" : self.type,
+            "path" : self.path,
+            "prompt" : self.prompt,
+            "name" : self.name,
+            "command" : self.command
+        } -->
+{% if queue  %}
+    {% for key, task in queue.items() %}
+    <div>
+    <span>type: {{ task["type"] }}</span>
+    <span>prompt: {{ task["prompt"] }}</span>
+    <span>name: {{ task["name"] }}</span>
+    </div>
+    {% endfor %}
 {% endif %}
 {% endblock %}
 {% endif %}
