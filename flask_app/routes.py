@@ -14,30 +14,35 @@ import datetime
 import time
 import threading
 
-import DreamBooth
 from image_generation import img_gen
 
-def enter_model(user, new_model_dir, prompt = "Placeholder prompt", name="Placeholder Name"):
+def enter_model(app, user, new_model_dir, prompt = "Placeholder prompt", name="Placeholder Name"):
     new_model_entry = models.Model(name=name, dir=new_model_dir, user_id=user, fine_tuning_promt=prompt)
     db.session.add(new_model_entry)
     db.session.commit()
 
-class result_object():  # TODO: Make actual result handling
-    def __init__(self):
-        self.ready = "yes"
-        self.successful = False
+def enter_image(app, user, path, prompt, model_id):
+    new_image_entry = models.Generated_image(user_id = user, model_id = model_id, promt = prompt, filename = path)
+    db.session.add(new_image_entry)
+    db.session.commit()
 
-def check_process(delay=30):
+def check_process(app, extra_string, delay=30):
     status = queue.poll_process()
-    if status != 0:
+    if status == 0:
+        with app.app_context():
+            #print(status)
+            # Make database entry!
+            task_type, task_key, user, path, prompt, name_or_model_id = queue.get_task_entry(queue.running)
+            if task_type == "model tuning":
+                enter_model(app, user, path,  prompt = prompt, name = name_or_model_id)
+            if task_type == "image generation":
+                enter_image(app, user, path, prompt, name_or_model_id)
+    elif status == None:
         #print(status)
         time.sleep(delay)
-        check_process()
-    else:
-        #print(status)
-        # Make database entry!
-        task_type, task_key, user, new_model_dir, prompt, name = queue.task_entry(queue.running)
-        enter_model(user, new_model_dir, prompt, name)
+        check_process(app, extra_string, delay=delay)
+    elif status < 0: # TODO: Stop looping on negative returncode
+        queue.crash()
 
 @app.route('/')
 def index():
@@ -111,18 +116,21 @@ async def generate():
     if form.validate_on_submit():
         #need user?
         print(current_user)
-        result = result_object() # TODO: Make actual result handling
         model_selection = int(form.models.data)
-        prompt = form.promt.data
+        model = db.session.scalar(sa.select(models.Model).where(models.Model.id == model_selection))
+        model_path = model.dir
+        username = db.session.scalar(sa.select(flask_app.models.User).where(flask_app.models.User.id == user_id)).username
+        prompt = username + " " + form.promt.data
+        initial_image = "Nathan_Explosion.png" # TODO: Let user chose something
+        initial_image_name = initial_image.split(".")[0]
+        new_image_name ='_'.join(str(datetime.datetime.now()).split()) + "_" + '_'.join(prompt.split()) + "_" + initial_image_name + ".png"
+        command = img_gen.get_command(model_path, initial_image, prompt, new_image_name)
         if model_selection != -1:
-            img_gen.flask_generate(model_selection = model_selection, prompt = prompt) # TODO: Consider lanching a subprocess for this!
-            print(prompt)
+            queue.queue_task(user_id, "image generation", new_image_name, prompt=prompt, command=command, model_id=model_selection)
+            process_checking_thread = threading.Thread(name="process checker", target=check_process, args = (app, "Hello :)"), kwargs = {"delay": 5})
+            process_checking_thread.start()
         else: # Allow generation with untuned model?
             pass
-        if queue.busy:
-            queue.add({"model" : model_selection,
-                       "prompt" : prompt})
-            print("Busy flag read!")
         return flask.render_template('tasks.html', queue = queue.q)
     return flask.render_template('generate.html', form=form)
 
@@ -145,18 +153,18 @@ async def tune():
         print(selected_images)
         image_filenames = [i.filename for i in selected_images]
         print(image_filenames)
-        from DreamBooth.accelerate_dreambooth import get_command, launch_training
+        import DreamBooth.accelerate_dreambooth as dreambooth
         user = current_user.get_id()
         username = db.session.scalar(sa.select(flask_app.models.User).where(flask_app.models.User.id == user)).username
         all_models = db.session.query(flask_app.models.Model).all()
         new_model_dir = "./models/" + str(len(all_models))
         #result = flask_app.tasks.tune.apply_async(user, image_filenames, new_model_dir, username)
-        command = get_command(user, image_filenames, new_model_dir, prompt=username)
+        command = dreambooth.get_command(user, image_filenames, new_model_dir, prompt=username)
         queue.queue_task(user, "model tuning", new_model_dir, prompt=username, name=name, command = command)
         #model_data = launch_training(namespace, user, new_model_dir, prompt=username, name = name) # Old code!
 
         # Trying to make a polling system to update the database once tuning is finished
-        process_checking_thread = threading.Thread(name="process checker", target=check_process)
+        process_checking_thread = threading.Thread(name="process checker", target=check_process, args = (app, "Hello :)"), kwargs = {"delay": 5})
         process_checking_thread.start()
         return flask.render_template('tasks.html', queue =  queue.q)
     return flask.render_template('tune.html', form=form)

@@ -19,14 +19,28 @@ from os import listdir
 from os.path import isfile, join
 
 import flask
-
-
+import argparse
 
 # model_id_or_path = "runwayml/stable-diffusion-v1-5"
 
 # Slotting in DreamBooth output
 DreamBooth_instance_prompt="kraakan"
 model_id_or_path = "./DreamBooth/kraakan_modell"
+
+def main(args):
+    pipe = initialize_pipe(args.pretrained_model_name_or_path) #TODO: Move code here!
+
+    input_dir = os.path.join(os.getcwd(), "../avatar-generator/flask_app/static/input/")
+
+    init_image = Image.open(input_dir + args.input_image).convert("RGB")
+    init_image = init_image.resize((768, 512))
+
+    images = pipe(prompt=args.prompt, image=init_image, strength=0.75, guidance_scale=7.5).images
+
+    
+    image_name = args.output_image
+    images[0].save("flask_app/static/output/" + image_name)
+    print("Image saved at flask_app/static/output/" + image_name)
 
 def initialize_pipe(model_id_or_path = "./DreamBooth/models/default"):
     device = "cuda"
@@ -116,3 +130,48 @@ def enter_promt(): #TODO: Fix or remove
                 print("Index out of range ")
     else:
         images[0].save("static/output/" + str(datetime.datetime.now()) + "_" + prompt + "_" + initial_image_name + ".png")
+
+def parse_args(input_args=None): # TODO: Parse the args!
+    parser = argparse.ArgumentParser(description="Stablediffusion img-to-img pipeline, modified for use with Arcada avatar generator app.")
+    parser.add_argument(
+        "--pretrained_model_name_or_path",
+        type=str,
+        default=None,
+        required=True,
+        help="Path to pretrained model or model identifier from huggingface.co/models.",
+    )
+    parser.add_argument(
+        "--input_image",
+        type=str,
+        default=None,
+        required=True,
+        help="Path to input image for img-to-img pipeline.",
+    )
+    parser.add_argument(
+        "--prompt",
+        type=str,
+        default=None,
+        required=True,
+        help="Prompt for image-to-image pipeline.",
+    )
+    parser.add_argument(
+        "--output_image",
+        type=str,
+        default=None,
+        required=True,
+        help="Path to new image file.",
+    )
+    if input_args is not None:
+        args = parser.parse_args(input_args)
+    else:
+        args = parser.parse_args()
+    return args
+
+def get_command(model_path, input_image, prompt, output_image):
+    command = ["python3", "image_generation/img_gen.py", "--pretrained_model_name_or_path=" + model_path, "--input_image=" + 
+               input_image, "--prompt=" + prompt, "--output_image=" + output_image]
+    return command
+
+if __name__ == "__main__": # This will be ran from the queue with subprocess.Popen()
+    args = parse_args()
+    main(args)

@@ -2,13 +2,14 @@ import json
 import subprocess
 
 class task():
-    def __init__(self, user:str, task_type:str, path:str, prompt:str, name:str, command = None):
+    def __init__(self, user:str, task_type:str, path:str, prompt:str, name:str, command = None, model_id=-1):
         self.user = user
         self.type = task_type
         self.path = path
         self.prompt = prompt
         self.name = name
         self.command = command
+        self. model_id = model_id
         self.status = None
     
     def save(self):
@@ -19,7 +20,8 @@ class task():
             "prompt" : self.prompt,
             "name" : self.name,
             "command" : self.command,
-            "status" : self.status
+            "status" : self.status,
+            "model_id": self.model_id
         }
         return return_dict
 
@@ -40,8 +42,8 @@ class queue():
         json.dump(self.q, queue_file, indent=4)
         queue_file.close()
     
-    def queue_task(self, user, task_type, path, prompt = "Placeholder Prompt", name="Placeholder Name", command = None):
-        new_task = task(user, task_type, path, prompt, name, command)
+    def queue_task(self, user, task_type, path, prompt = "Placeholder Prompt", name="Placeholder Name", command = None, model_id=None):
+        new_task = task(user, task_type, path, prompt, name, command, model_id)
         new_key = "0"
         for key in self.q.keys():
             new_key = str(int(key) + 1)
@@ -51,7 +53,7 @@ class queue():
             return new_key
         else: # TODO: Move this code to a method that can also run things from the queue
             self.running = new_key
-            process = subprocess.Popen(new_task.command, stdout=subprocess.PIPE, universal_newlines=True)
+            process = subprocess.Popen(new_task.command, stdout=subprocess.PIPE, universal_newlines=True) # TODO: Re-jigger image generateion to run as a subprocess
             self.track_process(process)
     
     def remove_task(self, key):
@@ -76,7 +78,7 @@ class queue():
         result = self.process.communicate()
         return result
     
-    def task_entry(self, task_key): # TODO: Make entry somewhere that has app context (adding it here causes circular import)
+    def get_task_entry(self, task_key):
         if task_key not in self.q.keys():
             return None
         else:
@@ -88,6 +90,14 @@ class queue():
                 prompt = model_data["prompt"]
                 name = model_data["name"]
                 return task_type, task_key, user, new_model_dir, prompt, name
+            
+            if  task_type == "image generation":
+                image_data = self.q[task_key]
+                user = image_data["user"]
+                image_path = image_data["path"]
+                prompt = image_data["prompt"]
+                model_id = image_data["model_id"]
+                return task_type, task_key, user, image_path, prompt, model_id
 
     
 
