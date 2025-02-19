@@ -3,6 +3,7 @@
 {% block content %}
         <h1>Hello, {{ user.username }}!</h1>
         <p>You are number {{ user.id }}!</p>
+        <!--
         {% if tuning_images %}
             {% for image in tuning_images %}
             <div>
@@ -10,7 +11,7 @@
             </div>
             {% endfor %}
         {% endif %}
-
+            -->
         {% if generated_images %}
         <h1>Generated:</h1>
             {% for image in generated_images %}
@@ -20,7 +21,7 @@
             {% endfor %}
         {% endif %}
 
-            <!--  Get base models -->
+            <!--  Get base models
         {% if models %}
             {% for model in models %}
             <h2>Generate an image</h2>
@@ -32,7 +33,7 @@
                 </form>
             </div>
             {% endfor %}
-        {% endif %}
+        {% endif %} -->
         <div>
             <h2>Tuning image submission form</h2>
             <form method="post" enctype="multipart/form-data" action="" class="inline"></form>

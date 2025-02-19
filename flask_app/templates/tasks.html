@@ -12,11 +12,28 @@ Come back later
         } -->
 {% if queue  %}
     {% for key, task in queue.items() %}
-    <div>
-    <span>type: {{ task["type"] }}</span>
-    <span>prompt: {{ task["prompt"] }}</span>
-    <span>name: {{ task["name"] }}</span>
-    </div>
+        {% if current_user.id|string == task["user"] %}
+        <form method="POST" action="">
+            <!-- {{ form.csrf_token() }}-->
+        <div>{{ key }}</div>
+        <div>
+            <span>type: {{ task["type"] }}</span>
+            <span>prompt: {{ task["prompt"] }}</span>
+            <span>name: {{ task["name"] }}</span>
+            <!-- {{ form.task(value=key) }}-->
+            <button type="submit" name="cancel" value={{ key }}>
+                Cancel
+            </button>
+            <button type="submit" name="run" value={{ key }}>
+                Run
+            </button>
+        </div>
+            {% if task["status"] == 0 %} <!-- This means successfully executed -->
+                <!-- Green, maybe show image if it's one -->
+                <span>status: completed</span>
+        </form>
+            {% endif %}
+        {% endif %}
     {% endfor %}
 {% endif %}
 {% endblock %}

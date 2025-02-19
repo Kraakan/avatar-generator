@@ -3,7 +3,7 @@ import flask
 from flask_login import current_user, login_user, logout_user, login_required
 import flask_app
 from flask_app import app, db, models, queue
-from flask_app.forms import LoginForm, RegistrationForm, TuningImageForm, ImageGenerationForm, TuningForm
+from flask_app.forms import LoginForm, RegistrationForm, TuningImageForm, ImageGenerationForm, TuningForm, TaskForm
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
 from werkzeug.utils import secure_filename
@@ -15,6 +15,7 @@ import time
 import threading
 
 from image_generation import img_gen
+
 
 def enter_model(app, user, new_model_dir, prompt = "Placeholder prompt", name="Placeholder Name"):
     new_model_entry = models.Model(name=name, dir=new_model_dir, user_id=user, fine_tuning_promt=prompt)
@@ -46,7 +47,6 @@ def check_process(app, extra_string, delay=30):
 
 @app.route('/')
 def index():
-    
     return flask.render_template('index.html', title='Home')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -98,7 +98,7 @@ def user():
     generated_images = db.session.scalars(sa.select(flask_app.models.Generated_image).where(flask_app.models.Generated_image.user_id == current_user.get_id()))
     return flask.render_template('user.html', user=user, models=models, tuning_images=tuning_images, generated_images=generated_images)
 
-@app.route('/user/generate', methods=['GET','POST']) # Send task to celery, then load a task monitor page
+@app.route('/user/generate', methods=['GET','POST']) # Send task to queue, then load a task monitor page
 @login_required
 async def generate():
     # List models
@@ -126,12 +126,14 @@ async def generate():
         new_image_name ='_'.join(str(datetime.datetime.now()).split()) + "_" + '_'.join(prompt.split()) + "_" + initial_image_name + ".png"
         command = img_gen.get_command(model_path, initial_image, prompt, new_image_name)
         if model_selection != -1:
-            queue.queue_task(user_id, "image generation", new_image_name, prompt=prompt, command=command, model_id=model_selection)
-            process_checking_thread = threading.Thread(name="process checker", target=check_process, args = (app, "Hello :)"), kwargs = {"delay": 5})
-            process_checking_thread.start()
+            task = queue.queue_task(user_id, "image generation", new_image_name, prompt=prompt, command=command, model_id=model_selection)
+            # TODO: Don't start process checker unless task is actually launched.
+            if task[1] == "launching":
+                process_checking_thread = threading.Thread(name="process checker", target=check_process, args = (app, "Hello :)"), kwargs = {"delay": 5})
+                process_checking_thread.start()
         else: # Allow generation with untuned model?
             pass
-        return flask.render_template('tasks.html', queue = queue.q)
+        return flask.render_template('tasks.html', queue = queue.q, highlight = task)
     return flask.render_template('generate.html', form=form)
 
 @app.route('/user/tune', methods=['GET', 'POST']) # Launch tuning, then load a task monitor page
@@ -149,32 +151,45 @@ async def tune():
         name = form.name.data
         image_id_strings = [str(i) for i in form.tuning_images.data]
         selected_images = db.session.query(flask_app.models.Tuning_image).filter(flask_app.models.Tuning_image.id.in_(image_id_strings)).all()
-        #scalars(sa.select(flask_app.models.Tuning_image).where( flask_app.models.Tuning_image.id in image_id_strings))
         print(selected_images)
         image_filenames = [i.filename for i in selected_images]
         print(image_filenames)
         import DreamBooth.accelerate_dreambooth as dreambooth
         user = current_user.get_id()
         username = db.session.scalar(sa.select(flask_app.models.User).where(flask_app.models.User.id == user)).username
-        all_models = db.session.query(flask_app.models.Model).all()
-        new_model_dir = "./models/" + str(len(all_models))
-        #result = flask_app.tasks.tune.apply_async(user, image_filenames, new_model_dir, username)
+        dir_list = os.listdir('models')
+        new_i = 0
+        for d in dir_list:
+            d_i = int(d.split('_')[0])
+            if d_i >= new_i:
+                new_i = d_i + 1
+        print(new_i)
+        new_model_dir = "./models/" + str(new_i) # This caused an error: (sqlite3.IntegrityError) UNIQUE constraint failed: model.dir
+        new_model_dir = new_model_dir + "_" + username
         command = dreambooth.get_command(user, image_filenames, new_model_dir, prompt=username)
-        queue.queue_task(user, "model tuning", new_model_dir, prompt=username, name=name, command = command)
-        #model_data = launch_training(namespace, user, new_model_dir, prompt=username, name = name) # Old code!
-
-        # Trying to make a polling system to update the database once tuning is finished
-        process_checking_thread = threading.Thread(name="process checker", target=check_process, args = (app, "Hello :)"), kwargs = {"delay": 5})
-        process_checking_thread.start()
-        return flask.render_template('tasks.html', queue =  queue.q)
+        task = queue.queue_task(user, "model tuning", new_model_dir, prompt=username, name=name, command = command)
+        # TODO: Don't start process checker unless task is actually launched.
+        if task[1] == "launching":
+            process_checking_thread = threading.Thread(name="process checker", target=check_process, args = (app, "Hello :)"), kwargs = {"delay": 15})
+            process_checking_thread.start()
+        return flask.render_template('tasks.html', queue =  queue.q, highlight = task)
     return flask.render_template('tune.html', form=form)
 
-@app.route('/user/tasks', methods=['GET'])
+@app.route('/user/tasks', methods=['GET', 'POST'])
 @login_required
 def tasks(): # TODO: Create reverse-chronological list of tasks (including pending ones?)
     process_status = queue.poll_process()
-    print(process_status)
-    return flask.render_template('tasks.html', queue = queue.q)
+    form = TaskForm()
+    result = flask.request.form
+    print(result)
+    if len(result) > 0:
+        result = dict(result)
+    if 'run' in result.keys():
+            print("Run", result['run'])
+    if 'cancel' in result.keys():
+            print("Cancel", result['cancel'])
+            #return flask.render_template('tasks.html', queue =  queue.q, form=form, highlight = task)
+    return flask.render_template('tasks.html', queue = queue.q, form=form)
 
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required

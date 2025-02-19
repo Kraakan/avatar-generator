@@ -2,7 +2,7 @@
 # https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iii-web-forms
 from flask_wtf import FlaskForm
 from flask_wtf.file import MultipleFileField, FileAllowed, FileRequired
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField, SelectMultipleField, widgets
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField, SelectMultipleField, widgets, HiddenField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import sqlalchemy as sa
 
@@ -64,3 +64,8 @@ class TuningForm(FlaskForm):
     tuning_images = MultiCheckboxField('Select images to tune to', coerce=int)
     name = TextAreaField('Name your model')
     submit = SubmitField('Tune')
+
+class TaskForm(FlaskForm):
+    cancel = SubmitField('Cancel')
+    run = SubmitField('Run')
+    task = HiddenField()

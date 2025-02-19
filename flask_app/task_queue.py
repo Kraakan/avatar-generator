@@ -1,5 +1,6 @@
 import json
 import subprocess
+import datetime
 
 class task():
     def __init__(self, user:str, task_type:str, path:str, prompt:str, name:str, command = None, model_id=-1):
@@ -9,8 +10,10 @@ class task():
         self.prompt = prompt
         self.name = name
         self.command = command
-        self. model_id = model_id
+        self.model_id = model_id
         self.status = None
+        self.created = str(datetime.datetime.now())
+        self.updated = str(datetime.datetime.now())
     
     def save(self):
         return_dict = {
@@ -21,11 +24,12 @@ class task():
             "name" : self.name,
             "command" : self.command,
             "status" : self.status,
-            "model_id": self.model_id
+            "model_id": self.model_id,
+            "date" : self.updated
         }
         return return_dict
 
-class queue():
+class queue(): # TODO: re-create .json file if it's unreadable
     def __init__(self):
         self.running = None
         self.q = self.load_queue()
@@ -50,12 +54,24 @@ class queue():
         self.q[new_key] = new_task.save()
         self.save_queue()
         if self.running != None:
-            return new_key
+            return (new_key, "queued")
         else: # TODO: Move this code to a method that can also run things from the queue
-            self.running = new_key
-            process = subprocess.Popen(new_task.command, stdout=subprocess.PIPE, universal_newlines=True) # TODO: Re-jigger image generateion to run as a subprocess
-            self.track_process(process)
+            self.launch_task(new_key)
+            return (new_key, "launching")
     
+    def launch_task(self, key):
+            task_data = self.q[key]
+            task_to_run = task(task_data["user"], task_data["type"], task_data["path"], task_data["prompt"], task_data["name"], task_data["command"], task_data["model_id"])
+            self.running = key
+            process = subprocess.Popen(task_to_run.command, stdout=subprocess.PIPE, universal_newlines=True) # TODO: Re-jigger image generateion to run as a subprocess
+            self.track_process(process)
+
+    def promote_task(self, key):
+        if self.running != None: # Move task to front of queue (among user's tasks)
+            return new_key
+        else: # launch task
+            self.launch_task(new_key)
+
     def remove_task(self, key):
         removed = self.q.pop(key, None)
         self.save_queue()
@@ -98,12 +114,3 @@ class queue():
                 prompt = image_data["prompt"]
                 model_id = image_data["model_id"]
                 return task_type, task_key, user, image_path, prompt, model_id
-
-    
-
-    
-    def enter_image(self):
-        new_image_entry = models.Generated_image(user_id = model.user_id, model_id = model.id, promt = prompt, filename = image_name)
-        print(new_image_entry)
-        db.session.add(new_image_entry)
-        db.session.commit()
