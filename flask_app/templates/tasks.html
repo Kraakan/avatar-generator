@@ -10,29 +10,50 @@ Come back later
             "name" : self.name,
             "command" : self.command
         } -->
+        {% if message  %}
+        <div>{{ message[0]["type"] }} task {{ message[1] }}</div>
+        {% endif %}
+
 {% if queue  %}
     {% for key, task in queue.items() %}
-        {% if current_user.id|string == task["user"] %}
+        {% if current_user.id|string == task["user"] %} <!-- This means successfully executed -->
         <form method="POST" action="">
-            <!-- {{ form.csrf_token() }}-->
-        <div>{{ key }}</div>
+        <div>Task no. {{ key }}</div>
+        
+        {% if task["status"] == 0 %} <!-- This means successfully executed -->
+        <!-- Green, maybe show image if it's one -->
+        <div class = "completed">
+        {% else %}
         <div>
+        {% endif %}
+            {% if task["type"] == "image generation" %}
+            <img src={{ url_for('static', filename= 'output/' + task["path"] ) }} height="100">
+            {% else %}
             <span>type: {{ task["type"] }}</span>
+            {% endif %}
             <span>prompt: {{ task["prompt"] }}</span>
             <span>name: {{ task["name"] }}</span>
-            <!-- {{ form.task(value=key) }}-->
             <button type="submit" name="cancel" value={{ key }}>
+                {% if task["status"] == 0 %}
+                Remove
+                {% else %}
                 Cancel
+                {% endif %}
             </button>
+            {% if task["type"] == "image generation" %}
             <button type="submit" name="run" value={{ key }}>
                 Run
             </button>
-        </div>
+            {% endif %}
+        
             {% if task["status"] == 0 %} <!-- This means successfully executed -->
                 <!-- Green, maybe show image if it's one -->
-                <span>status: completed</span>
-        </form>
+                <div>status: completed</div>
+            {% else %}
+                <div>status: {{ task["status"] }}</div>
             {% endif %}
+        </div>
+        </form>
         {% endif %}
     {% endfor %}
 {% endif %}

@@ -8,6 +8,9 @@ https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates -
       {% else %}
       <title>Title</title>
       {% endif %}
+      {% if status %}
+      <div>App state: {{ status }}</div>
+      {% endif %}
     </head>
     <body>
         <div>

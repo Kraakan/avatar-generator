@@ -1,82 +1,4 @@
 {
-    "0": {
-        "user": "1",
-        "type": "image generation",
-        "path": "./models/17",
-        "prompt": "A man at work",
-        "name": "Placeholder Name",
-        "command": [
-            "python3",
-            "image_generation/img_gen.py",
-            "--pretrained_model_name_or_path=./models/17",
-            "--input_image=Nathan_Explosion.png",
-            "--prompt=A man at work"
-        ],
-        "status": null
-    },
-    "1": {
-        "user": "1",
-        "type": "image generation",
-        "path": "./models/17",
-        "prompt": "he's not smart but he's trying",
-        "name": "Placeholder Name",
-        "command": [
-            "python3",
-            "image_generation/img_gen.py",
-            "--pretrained_model_name_or_path=./models/17",
-            "--input_image=Nathan_Explosion.png",
-            "--prompt=he's not smart but he's trying"
-        ],
-        "status": null
-    },
-    "2": {
-        "user": "1",
-        "type": "image generation",
-        "path": "./models/17",
-        "prompt": "kraakan he's not smart but he's trying",
-        "name": "Placeholder Name",
-        "command": [
-            "python3",
-            "image_generation/img_gen.py",
-            "--pretrained_model_name_or_path=./models/17",
-            "--input_image=Nathan_Explosion",
-            "--prompt=kraakan he's not smart but he's trying",
-            "--output_image=2025-02-18_15:55:34.683287_kraakan_he's_not_smart_but_he's_trying_Nathan_Explosion.png.png"
-        ],
-        "status": null
-    },
-    "3": {
-        "user": "1",
-        "type": "image generation",
-        "path": "./models/17",
-        "prompt": "kraakan he's not smart but he's trying",
-        "name": "Placeholder Name",
-        "command": [
-            "python3",
-            "image_generation/img_gen.py",
-            "--pretrained_model_name_or_path=./models/17",
-            "--input_image=Nathan_Explosion.png",
-            "--prompt=kraakan he's not smart but he's trying",
-            "--output_image=2025-02-18_15:56:21.756564_kraakan_he's_not_smart_but_he's_trying_Nathan_Explosion.png.png"
-        ],
-        "status": null
-    },
-    "4": {
-        "user": "1",
-        "type": "image generation",
-        "path": "./models/17",
-        "prompt": "kraakan hopeful",
-        "name": "Placeholder Name",
-        "command": [
-            "python3",
-            "image_generation/img_gen.py",
-            "--pretrained_model_name_or_path=./models/17",
-            "--input_image=Nathan_Explosion.png",
-            "--prompt=kraakan hopeful",
-            "--output_image=2025-02-18_15:59:33.495045_kraakan_hopeful_Nathan_Explosion.png.png"
-        ],
-        "status": null
-    },
     "5": {
         "user": "1",
         "type": "image generation",
@@ -308,7 +230,7 @@
     "16": {
         "user": "1",
         "type": "image generation",
-        "path": "2025-02-19_14:38:35.414886_kraakan_a_lazy_motherfucker_Nathan_Explosion.png",
+        "path": "2025-02-20_11:35:33.970844_kraakan_a_lazy_motherfucker_Nathan_Explosion.png",
         "prompt": "kraakan a lazy motherfucker",
         "name": "Placeholder Name",
         "command": [
@@ -319,8 +241,129 @@
             "--prompt=kraakan a lazy motherfucker",
             "--output_image=2025-02-19_14:38:35.414886_kraakan_a_lazy_motherfucker_Nathan_Explosion.png"
         ],
-        "status": null,
+        "status": 0,
         "model_id": 20,
         "date": "2025-02-19 14:38:35.414912"
+    },
+    "17": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-20_11:52:37.058942_kraakan_a_little_lost_Nathan_Explosion.png",
+        "prompt": "kraakan a little lost",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/18_kraakan",
+            "--input_image=Nathan_Explosion.png",
+            "--prompt=kraakan a little lost",
+            "--output_image=2025-02-20_11:52:37.058942_kraakan_a_little_lost_Nathan_Explosion.png"
+        ],
+        "status": 0,
+        "model_id": 20,
+        "date": "2025-02-20 11:52:37.058969"
+    },
+    "18": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-20_13:35:17.858546_kraakan_looking_busy_Nathan_Explosion.png",
+        "prompt": "kraakan looking busy",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/18_kraakan",
+            "--input_image=Nathan_Explosion.png",
+            "--prompt=kraakan looking busy",
+            "--output_image=2025-02-20_13:35:17.858546_kraakan_looking_busy_Nathan_Explosion.png"
+        ],
+        "status": 0,
+        "model_id": 20,
+        "date": "2025-02-20 11:56:35.659289"
+    },
+    "19": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-20_14:35:13.209735_kraakan_the_story_of_a_boy_Nathan_Explosion.png",
+        "prompt": "kraakan the story of a boy",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/18_kraakan",
+            "--input_image=Nathan_Explosion.png",
+            "--prompt=kraakan the story of a boy",
+            "--output_image=2025-02-20_14:35:13.209735_kraakan_the_story_of_a_boy_Nathan_Explosion.png"
+        ],
+        "status": 0,
+        "model_id": 20,
+        "date": "2025-02-20 14:35:13.209776"
+    },
+    "20": {
+        "user": "1",
+        "type": "model tuning",
+        "path": "./models/21_kraakan",
+        "prompt": "kraakan",
+        "name": "End-of-day test!",
+        "command": [
+            "python3",
+            "-m",
+            "accelerate.commands.launch",
+            "DreamBooth/train_dreambooth.py",
+            "--pretrained_model_name_or_path=./DreamBooth/models/default",
+            "--output_dir=./models/21_kraakan",
+            "--instance_prompt=kraakan",
+            "--num_validation_images=4",
+            "--validation_steps=100",
+            "--resolution=512",
+            "--train_batch_size=1",
+            "--gradient_accumulation_steps=1",
+            "--learning_rate=5e-6",
+            "--lr_scheduler=constant",
+            "--lr_warmup_steps=0",
+            "--max_train_steps=400",
+            "--gradient_checkpointing",
+            "--use_8bit_adam",
+            "--instance_image_list=2024-08-29 17:53:58.814550.png#2024-08-30 11:31:22.840695.jpg#2024-08-30 11:31:22.855680.jpg#2024-08-30 11:31:22.867911.jpg#2024-08-30 11:31:22.877342.jpg#2024-08-30 11:31:22.910930.jpg#2024-08-30 11:31:22.919480.jpg#2024-08-30 11:31:22.925817.jpg"
+        ],
+        "status": 0,
+        "model_id": null,
+        "date": "2025-02-20 14:40:34.753722"
+    },
+    "21": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-20_14:50:03.891017_kraakan_testing_Nathan_Explosion.png",
+        "prompt": "kraakan testing",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/18_kraakan",
+            "--input_image=Nathan_Explosion.png",
+            "--prompt=kraakan testing",
+            "--output_image=2025-02-20_14:50:03.891017_kraakan_testing_Nathan_Explosion.png"
+        ],
+        "status": 0,
+        "model_id": 20,
+        "date": "2025-02-20 14:41:31.465653"
+    },
+    "22": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-20_14:51:09.688719_kraakan_avatar_Nathan_Explosion.png",
+        "prompt": "kraakan avatar",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/21_kraakan",
+            "--input_image=Nathan_Explosion.png",
+            "--prompt=kraakan avatar",
+            "--output_image=2025-02-20_14:51:09.688719_kraakan_avatar_Nathan_Explosion.png"
+        ],
+        "status": 0,
+        "model_id": 21,
+        "date": "2025-02-20 14:51:09.688753"
     }
 }

@@ -1,6 +1,7 @@
 import json
 import subprocess
 import datetime
+import threading
 
 class task():
     def __init__(self, user:str, task_type:str, path:str, prompt:str, name:str, command = None, model_id=-1):
@@ -61,21 +62,27 @@ class queue(): # TODO: re-create .json file if it's unreadable
     
     def launch_task(self, key):
             task_data = self.q[key]
-            task_to_run = task(task_data["user"], task_data["type"], task_data["path"], task_data["prompt"], task_data["name"], task_data["command"], task_data["model_id"])
+            task_to_run = task(task_data["user"], task_data["type"], task_data["path"], task_data["prompt"], task_data["name"], task_data["command"], task_data["model_id"] or None)
             self.running = key
-            process = subprocess.Popen(task_to_run.command, stdout=subprocess.PIPE, universal_newlines=True) # TODO: Re-jigger image generateion to run as a subprocess
+            process = subprocess.Popen(task_to_run.command, stdout=subprocess.PIPE, universal_newlines=True) # TODO: Trigger process tracking thread
             self.track_process(process)
 
-    def promote_task(self, key):
+    def promote_task(self, key): # TODO: create an order in the queue - possibly an "actually queued" section
+        print(self.q[key])
+        if self.q[key]["type"] == "image generation":
+            new_entry = self.update_image_name(self.q[key])
+            self.q[key] = new_entry
+            print(new_entry)
         if self.running != None: # Move task to front of queue (among user's tasks)
-            return new_key
+            return (self.q[key], "promoted")
         else: # launch task
-            self.launch_task(new_key)
+            self.launch_task(key) # TODO: Create new filenames for images at least - Ask to verify that the user wants to replace models
+            return (self.q[key], "launching")
 
     def remove_task(self, key):
         removed = self.q.pop(key, None)
         self.save_queue()
-        return removed
+        return removed, "removed"
     
     def track_process(self, process):
         self.process = process
@@ -114,3 +121,19 @@ class queue(): # TODO: re-create .json file if it's unreadable
                 prompt = image_data["prompt"]
                 model_id = image_data["model_id"]
                 return task_type, task_key, user, image_path, prompt, model_id
+    
+    def update_image_name(self, entry):
+        # Update path for database
+        old_image_name = entry["path"]
+        date_time = str(datetime.datetime.now()).split()
+        new_image_name ="_".join(date_time + old_image_name.split("_")[2:])
+        entry["path"] = new_image_name
+        # Update target file path in command
+        old_command = entry["command"]
+        i = 0
+        while i < len(old_command):
+            old_command[i] = old_command[i].replace(old_image_name, new_image_name)
+            i = i + 1
+        entry["command"] = old_command
+        print(entry)
+        return entry

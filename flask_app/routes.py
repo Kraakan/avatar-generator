@@ -17,19 +17,28 @@ import threading
 from image_generation import img_gen
 
 
+global app_status
+app_status = "Pending"
+
 def enter_model(app, user, new_model_dir, prompt = "Placeholder prompt", name="Placeholder Name"):
     new_model_entry = models.Model(name=name, dir=new_model_dir, user_id=user, fine_tuning_promt=prompt)
     db.session.add(new_model_entry)
     db.session.commit()
+    queue.running = None
+    print(new_model_dir, "entered")
 
 def enter_image(app, user, path, prompt, model_id):
     new_image_entry = models.Generated_image(user_id = user, model_id = model_id, promt = prompt, filename = path)
     db.session.add(new_image_entry)
     db.session.commit()
+    queue.running = None
+    print(path, "entered")
 
-def check_process(app, extra_string, delay=30):
+def check_process(app = app, delay=30):
+    global app_status
     status = queue.poll_process()
     if status == 0:
+        app_status = "Pending"
         with app.app_context():
             #print(status)
             # Make database entry!
@@ -39,15 +48,17 @@ def check_process(app, extra_string, delay=30):
             if task_type == "image generation":
                 enter_image(app, user, path, prompt, name_or_model_id)
     elif status == None:
-        #print(status)
+        app_status = "Busy"
+        print(status)
         time.sleep(delay)
-        check_process(app, extra_string, delay=delay)
+        check_process(delay=delay)
     elif status < 0: # TODO: Stop looping on negative returncode
+        app_status = "Crashed"
         queue.crash()
 
 @app.route('/')
 def index():
-    return flask.render_template('index.html', title='Home')
+    return flask.render_template('index.html', title='Home', status = app_status)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -66,7 +77,7 @@ def login():
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = flask.url_for('index')
         return flask.redirect(next_page)
-    return flask.render_template('login.html', title='Sign In', form=form)
+    return flask.render_template('login.html', title='Sign In', form=form, status = app_status)
 
 @app.route('/logout')
 def logout():
@@ -96,7 +107,7 @@ def user():
     models = db.session.scalars(sa.select(flask_app.models.Model).where(flask_app.models.Model.user_id == current_user.get_id()))
     tuning_images = db.session.scalars(sa.select(flask_app.models.Tuning_image).where(flask_app.models.Tuning_image.user_id == current_user.get_id()))
     generated_images = db.session.scalars(sa.select(flask_app.models.Generated_image).where(flask_app.models.Generated_image.user_id == current_user.get_id()))
-    return flask.render_template('user.html', user=user, models=models, tuning_images=tuning_images, generated_images=generated_images)
+    return flask.render_template('user.html', user=user, models=models, tuning_images=tuning_images, generated_images=generated_images, status = app_status)
 
 @app.route('/user/generate', methods=['GET','POST']) # Send task to queue, then load a task monitor page
 @login_required
@@ -129,12 +140,12 @@ async def generate():
             task = queue.queue_task(user_id, "image generation", new_image_name, prompt=prompt, command=command, model_id=model_selection)
             # TODO: Don't start process checker unless task is actually launched.
             if task[1] == "launching":
-                process_checking_thread = threading.Thread(name="process checker", target=check_process, args = (app, "Hello :)"), kwargs = {"delay": 5})
+                process_checking_thread = threading.Thread(name="process checker", target=check_process, kwargs = {"delay": 5})
                 process_checking_thread.start()
         else: # Allow generation with untuned model?
             pass
-        return flask.render_template('tasks.html', queue = queue.q, highlight = task)
-    return flask.render_template('generate.html', form=form)
+        return flask.render_template('tasks.html', queue = queue.q, highlight = task, status = app_status)
+    return flask.render_template('generate.html', form=form, status = app_status)
 
 @app.route('/user/tune', methods=['GET', 'POST']) # Launch tuning, then load a task monitor page
 @login_required
@@ -170,26 +181,33 @@ async def tune():
         task = queue.queue_task(user, "model tuning", new_model_dir, prompt=username, name=name, command = command)
         # TODO: Don't start process checker unless task is actually launched.
         if task[1] == "launching":
-            process_checking_thread = threading.Thread(name="process checker", target=check_process, args = (app, "Hello :)"), kwargs = {"delay": 15})
+            process_checking_thread = threading.Thread(name="process checker", target=check_process, kwargs = {"delay": 15})
             process_checking_thread.start()
-        return flask.render_template('tasks.html', queue =  queue.q, highlight = task)
-    return flask.render_template('tune.html', form=form)
+        return flask.render_template('tasks.html', queue =  queue.q, highlight = task, status = app_status)
+    return flask.render_template('tune.html', form=form, status = app_status)
 
 @app.route('/user/tasks', methods=['GET', 'POST'])
 @login_required
 def tasks(): # TODO: Create reverse-chronological list of tasks (including pending ones?)
-    process_status = queue.poll_process()
+    if queue.running != None:
+        process_status = queue.poll_process()
+        print(process_status)
     form = TaskForm()
     result = flask.request.form
     print(result)
-    if len(result) > 0:
-        result = dict(result)
+    message = None
     if 'run' in result.keys():
             print("Run", result['run'])
+            message = queue.promote_task(result['run'])
+            print(message)
+            if message[1] == "launching":
+                process_checking_thread = threading.Thread(name="process checker", target=check_process, kwargs = {"delay": 15})
+                process_checking_thread.start()
     if 'cancel' in result.keys():
+            message = queue.remove_task(result['cancel'])
             print("Cancel", result['cancel'])
             #return flask.render_template('tasks.html', queue =  queue.q, form=form, highlight = task)
-    return flask.render_template('tasks.html', queue = queue.q, form=form)
+    return flask.render_template('tasks.html', queue = queue.q, form=form, message = message, status = app_status)
 
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
