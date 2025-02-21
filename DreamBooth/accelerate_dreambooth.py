@@ -12,7 +12,7 @@ def create_config(user):
 def get_command(user, image_list, new_model_dir, prompt = None, model_name = None):
     image_string = '#'.join(image_list)
     dir_path = "/users/"
-    print(dir_path + user + '.json')
+    print(dir_path + user + '.json') # TODO: Do users actually need individual settings?
     print(os.path.dirname(__file__))
     try:
         with open(os.path.dirname(__file__) + dir_path + user + '.json') as f: # TODO: add correct file structure

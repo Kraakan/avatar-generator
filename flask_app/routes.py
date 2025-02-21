@@ -16,6 +16,8 @@ import threading
 
 from image_generation import img_gen
 
+# svg conversion
+from cairosvg import svg2png
 
 global app_status
 app_status = "Pending"
@@ -114,7 +116,8 @@ def user():
 async def generate():
     # List models
     # Base model + user generated
-    model_list = [(-1, "Base model")]
+    #model_list = [(-1, "Base model")] # Allow generation with untuned model?
+    model_list = []
     user_id = current_user.get_id()
     user_models = db.session.scalars(sa.select(flask_app.models.Model).where(flask_app.models.Model.user_id == int(user_id)))
     #all_user_models = db.session.query(flask_app.models.Model)
@@ -124,6 +127,7 @@ async def generate():
     print(model_list)
     form = ImageGenerationForm()
     form.models.choices = model_list
+    form.input_images.choices = os.listdir('flask_app/static/input')
     if form.validate_on_submit():
         #need user?
         print(current_user)
@@ -132,8 +136,14 @@ async def generate():
         model_path = model.dir
         username = db.session.scalar(sa.select(flask_app.models.User).where(flask_app.models.User.id == user_id)).username
         prompt = username + " " + form.promt.data
-        initial_image = "Nathan_Explosion.png" # TODO: Let user chose something
-        initial_image_name = initial_image.split(".")[0]
+        initial_image = form.input_images.data
+        #initial_image = "Nathan_Explosion.png" # TODO: Let user chose something
+        initial_image_name, extension = initial_image.split(".")
+        if extension == "svg": #Convert svg to png
+            svg = open("flask_app/static/input/" + initial_image, "r").read()
+            png_image_name = initial_image_name +'.png'
+            svg2png(bytestring=svg,write_to='flask_app/static/input/' + png_image_name)
+            initial_image = png_image_name
         new_image_name ='_'.join(str(datetime.datetime.now()).split()) + "_" + '_'.join(prompt.split()) + "_" + initial_image_name + ".png"
         command = img_gen.get_command(model_path, initial_image, prompt, new_image_name)
         if model_selection != -1:

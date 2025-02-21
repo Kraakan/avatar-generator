@@ -43,6 +43,7 @@ class TuningImageForm(FlaskForm):
 
 class ImageGenerationForm(FlaskForm):
     models = SelectField('Model')
+    input_images = SelectField('Input image')
     promt = TextAreaField('Prompt')
     submit = SubmitField('Generate')
 

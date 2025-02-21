@@ -16,17 +16,17 @@ Come back later
 
 {% if queue  %}
     {% for key, task in queue.items() %}
-        {% if current_user.id|string == task["user"] %} <!-- This means successfully executed -->
+        {% if current_user.id|string == task["user"] %} {# This means successfully executed #}
         <form method="POST" action="">
         <div>Task no. {{ key }}</div>
         
-        {% if task["status"] == 0 %} <!-- This means successfully executed -->
-        <!-- Green, maybe show image if it's one -->
+        {% if task["status"] == 0 %} {# This means successfully executed #}
+        {# Green, maybe show image if it's one #}
         <div class = "completed">
         {% else %}
         <div>
         {% endif %}
-            {% if task["type"] == "image generation" %}
+            {% if task["type"] == "image generation" and task["status"] == 0 %}
             <img src={{ url_for('static', filename= 'output/' + task["path"] ) }} height="100">
             {% else %}
             <span>type: {{ task["type"] }}</span>
@@ -46,8 +46,7 @@ Come back later
             </button>
             {% endif %}
         
-            {% if task["status"] == 0 %} <!-- This means successfully executed -->
-                <!-- Green, maybe show image if it's one -->
+            {% if task["status"] == 0 %} {# This means successfully executed #}
                 <div>status: completed</div>
             {% else %}
                 <div>status: {{ task["status"] }}</div>
