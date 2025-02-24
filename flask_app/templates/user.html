@@ -1,27 +1,74 @@
 {% extends "base.html" %}
 
 {% block content %}
-        <h1>Hello, {{ user.username }}!</h1>
-        <p>You are number {{ user.id }}!</p>
-        <!--
-        {% if tuning_images %}
-            {% for image in tuning_images %}
-            <div>
-                <img src={{ url_for('static', filename= image.filename ) }} height="300">
-            </div>
-            {% endfor %}
-        {% endif %}
-            -->
-        {% if generated_images %}
-        <h1>Generated:</h1>
-            {% for image in generated_images %}
-            <div>
-                <img src={{ url_for('static', filename= 'output/' + image.filename ) }} height="300">
-            </div>
-            {% endfor %}
-        {% endif %}
+<h1>Hello, {{ user.username }}!</h1>
+<p>You are number {{ user.id }}!</p>
 
-            <!--  Get base models
+{#
+{% if tuning_images %}
+    {% for image in tuning_images %}
+    <div>
+        <img src={{ url_for('static', filename= image.filename ) }} height="300">
+    </div>
+    {% endfor %}
+{% endif %}
+#}
+
+{% if generated_images %}
+<h1>Generated images</h1>
+{% for image in generated_images %}
+<div>
+    <img src={{ url_for('static', filename='output/' + image.filename ) }} height="300">
+    <div popover id="g{{ image.id }}"> 
+        <img src={{ url_for('static', filename='output/' + image.filename ) }} height="500">
+        <p>Delete this image.</p>
+        <h1>Are you sure?</h1>
+
+    <button popovertarget="g{{ image.id }}" popovertargetaction="hide">
+        No!
+    </button>
+    <form action="{{ url_for('delete') }}">
+        <button formmethod="post" type="submit" name="delete" value="generated_{{ image.id }}">
+            Yes!
+        </button>
+    </form>
+    </div>
+    <button popovertarget="g{{ image.id }}" >
+        Delete
+    </button>
+    <span>{{ image.id }}</span>
+</div>
+{% endfor %}
+{% endif %}
+
+{% if tuning_images %}
+<h1>Tuning images</h1>
+{% for image in tuning_images %}
+<div>
+    <img src={{ url_for('static', filename=image.filename ) }} height="300">
+    <div popover id="t{{ image.id }}"> 
+        <img src={{ url_for('static', filename=image.filename ) }} height="500">
+        <p>Delete this image.</p>
+        <h1>Are you sure?</h1>
+
+    <button popovertarget="t{{ image.id }}" popovertargetaction="hide">
+        No!
+    </button>
+    <form action="{{ url_for('delete') }}">
+        <button formmethod="post" type="submit" name="delete" value="tuning_{{ image.id }}">
+            Yes!
+        </button>
+    </form>
+    </div>
+    <button popovertarget="t{{ image.id }}" >
+        Delete
+    </button>
+    <span>{{ image.id }}</span>
+</div>
+{% endfor %}
+{% endif %}
+
+<!--  Get base models
         {% if models %}
             {% for model in models %}
             <h2>Generate an image</h2>
@@ -34,16 +81,16 @@
             </div>
             {% endfor %}
         {% endif %} -->
-        <div>
-            <h2>Tuning image submission form</h2>
-            <form method="post" enctype="multipart/form-data" action="" class="inline"></form>
-        </div>
-        <div>
-            <h2>Image generation form</h2>
-            <form method="post" enctype="multipart/form-data" action="{{ url_for('generate') }}" class="inline">
-                <input type="hidden" name="model_id" value='2'>
-                <button type="submit" name="generate_image" value="submit_value">
-                </button>
-              </form>
-        </div>
+<div>
+    <h2>Tuning image submission form</h2>
+    <form method="post" enctype="multipart/form-data" action="" class="inline"></form>
+</div>
+<div>
+    <h2>Image generation form</h2>
+    <form method="post" enctype="multipart/form-data" action="{{ url_for('generate') }}" class="inline">
+        <input type="hidden" name="model_id" value='2'>
+        <button type="submit" name="generate_image" value="submit_value">
+        </button>
+    </form>
+</div>
 {% endblock %}

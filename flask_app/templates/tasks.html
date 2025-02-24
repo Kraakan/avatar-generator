@@ -2,21 +2,23 @@
 {% if current_user.is_authenticated %}
 Come back later
 {% block content %}
-<!--  {
+{#      task queue returns dicts that look like this:
+    {
             "user" : self.user,
             "type" : self.type,
             "path" : self.path,
             "prompt" : self.prompt,
             "name" : self.name,
             "command" : self.command
-        } -->
+        } #}
+
         {% if message  %}
         <div>{{ message[0]["type"] }} task {{ message[1] }}</div>
         {% endif %}
 
 {% if queue  %}
-    {% for key, task in queue.items() %}
-        {% if current_user.id|string == task["user"] %} {# This means successfully executed #}
+    {% for key, task in reversed(queue.items()) %}
+        {% if current_user.id|string == task["user"] %} {# Only show tasks created by current user #}
         <form method="POST" action="">
         <div>Task no. {{ key }}</div>
         

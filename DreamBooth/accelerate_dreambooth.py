@@ -4,22 +4,12 @@ import json
 import os
 import subprocess
 
-# TODO: pass arguments
-
-def create_config(user):
-    pass
-
 def get_command(user, image_list, new_model_dir, prompt = None, model_name = None):
     image_string = '#'.join(image_list)
-    dir_path = "/users/"
-    print(dir_path + user + '.json') # TODO: Do users actually need individual settings?
-    print(os.path.dirname(__file__))
-    try:
-        with open(os.path.dirname(__file__) + dir_path + user + '.json') as f: # TODO: add correct file structure
-            launch_args = json.load(f)      # (it might be different depending on server)
-    except FileNotFoundError:
-        print(FileNotFoundError)
-        launch_args = create_config(user)
+    print(os.path.dirname(__file__) + '/settings.json')
+    
+    with open(os.path.dirname(__file__) + '/settings.json') as f: # TODO: add correct file structure
+        launch_args = json.load(f)      # (it might be different depending on server)
 
     launch_args["instance_image_list"] = image_string
     launch_args["output_dir"]= new_model_dir

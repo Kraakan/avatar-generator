@@ -105,10 +105,12 @@ def register():
 @login_required
 # Show models and images
 def user():
+    flask.session['prev'] = flask.url_for('user')
     user = db.session.scalar(sa.select(flask_app.models.User).where(flask_app.models.User.id == current_user.get_id()))
-    models = db.session.scalars(sa.select(flask_app.models.Model).where(flask_app.models.Model.user_id == current_user.get_id()))
-    tuning_images = db.session.scalars(sa.select(flask_app.models.Tuning_image).where(flask_app.models.Tuning_image.user_id == current_user.get_id()))
-    generated_images = db.session.scalars(sa.select(flask_app.models.Generated_image).where(flask_app.models.Generated_image.user_id == current_user.get_id()))
+    models = db.session.scalars(sa.select(flask_app.models.Model).where(flask_app.models.Model.user_id == current_user.get_id()).order_by(-flask_app.models.Model.id))
+    tuning_images = db.session.scalars(sa.select(flask_app.models.Tuning_image).where(flask_app.models.Tuning_image.user_id == current_user.get_id()).order_by(-flask_app.models.Tuning_image.id))
+    generated_images = db.session.scalars(sa.select(flask_app.models.Generated_image).where(flask_app.models.Generated_image.user_id == current_user.get_id()).order_by(-flask_app.models.Generated_image.id))
+    print(tuning_images)
     return flask.render_template('user.html', user=user, models=models, tuning_images=tuning_images, generated_images=generated_images, status = app_status)
 
 @app.route('/user/generate', methods=['GET','POST']) # Send task to queue, then load a task monitor page
@@ -119,7 +121,7 @@ async def generate():
     #model_list = [(-1, "Base model")] # Allow generation with untuned model?
     model_list = []
     user_id = current_user.get_id()
-    user_models = db.session.scalars(sa.select(flask_app.models.Model).where(flask_app.models.Model.user_id == int(user_id)))
+    user_models = db.session.scalars(sa.select(flask_app.models.Model).where(flask_app.models.Model.user_id == int(user_id)).order_by(-flask_app.models.Model.id))
     #all_user_models = db.session.query(flask_app.models.Model)
     #print(type(all_user_models.all()[0].user_id), type(user_id))
     #print(all_user_models.all()[0].user_id == int(user_id))
@@ -213,10 +215,10 @@ def tasks(): # TODO: Create reverse-chronological list of tasks (including pendi
             if message[1] == "launching":
                 process_checking_thread = threading.Thread(name="process checker", target=check_process, kwargs = {"delay": 15})
                 process_checking_thread.start()
+                return flask.render_template('tasks.html', queue =  queue.q, form=form, highlight = result['run'])
     if 'cancel' in result.keys():
             message = queue.remove_task(result['cancel'])
             print("Cancel", result['cancel'])
-            #return flask.render_template('tasks.html', queue =  queue.q, form=form, highlight = task)
     return flask.render_template('tasks.html', queue = queue.q, form=form, message = message, status = app_status)
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -238,6 +240,25 @@ def upload():
         return flask.redirect(flask.url_for('index'))
 
     return flask.render_template('upload.html', form=form)
+
+@app.route('/delete', methods=['POST'])
+@login_required
+def delete():
+    data = flask.request.get_data(as_text=True)
+    data = data.split('=')[1]
+    img_type, id = data.split('_')
+    print(img_type, id)
+    if img_type == "generated":
+        img_to_del = db.session.scalar(sa.select(flask_app.models.Generated_image).where(flask_app.models.Generated_image.id == id))
+        if img_to_del.user_id == current_user.id:
+            db.session.delete(img_to_del)
+            db.session.commit()
+    if img_type == "tuning":
+        img_to_del = db.session.scalar(sa.select(flask_app.models.Tuning_image).where(flask_app.models.Tuning_image.id == id))
+        if img_to_del.user_id == current_user.id:
+            db.session.delete(img_to_del)
+            db.session.commit()
+    return flask.redirect(flask.session['prev'])
 
 @app.get("/result/<id>")
 def result(id):

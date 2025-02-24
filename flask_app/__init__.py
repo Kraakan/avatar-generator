@@ -28,6 +28,8 @@ app.config.from_mapping(
     'sqlite:///' + os.path.join(basedir, 'app.db'),
 )
 
+app.jinja_env.globals.update(reversed=reversed) # Not crucial, but it's nice to have newer stuff on top of the page
+
 db = SQLAlchemy(app)
 #init_celery(app, celery) TODO: Remove function if useless
 
