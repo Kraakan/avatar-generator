@@ -129,7 +129,14 @@ async def generate():
     print(model_list)
     form = ImageGenerationForm()
     form.models.choices = model_list
-    form.input_images.choices = os.listdir('flask_app/static/input')
+    input_images = os.listdir('flask_app/static/input')
+    i = 0
+    while i < len(input_images):
+        input_images[i] = "/input/" + input_images[i]
+        i = i + 1
+    print(input_images)
+    tuning_images = db.session.scalars(sa.select(flask_app.models.Tuning_image).where(flask_app.models.Tuning_image.user_id == current_user.get_id()).order_by(-flask_app.models.Tuning_image.id))
+    form.input_images.choices = input_images + list(tuning_images)
     if form.validate_on_submit():
         #need user?
         print(current_user)
@@ -140,7 +147,11 @@ async def generate():
         prompt = username + " " + form.promt.data
         initial_image = form.input_images.data
         #initial_image = "Nathan_Explosion.png" # TODO: Let user chose something
-        initial_image_name, extension = initial_image.split(".")
+        split_image_name = initial_image.split(".")
+        extension = split_image_name[-1]
+        initial_image_name = ".".join(split_image_name[:-1])    
+        if len(initial_image_name.split("/")) > 1:
+            initial_image_name = initial_image_name.split("/")[-1]
         if extension == "svg": #Convert svg to png
             svg = open("flask_app/static/input/" + initial_image, "r").read()
             png_image_name = initial_image_name +'.png'
@@ -237,9 +248,9 @@ def upload():
             ))
             db.session.add(tuning_image)
             db.session.commit()
-        return flask.redirect(flask.url_for('index'))
+        return flask.render_template('upload.html', form=form, message = "Upload successful")
 
-    return flask.render_template('upload.html', form=form)
+    return flask.render_template('upload.html', form=form, message = None)
 
 @app.route('/delete', methods=['POST'])
 @login_required
@@ -259,6 +270,18 @@ def delete():
             db.session.delete(img_to_del)
             db.session.commit()
     return flask.redirect(flask.session['prev'])
+
+@app.get("/status")
+def status(): # Have attempted to get shell output from subprocess, so far unsuccessfully
+    """a_status = queue.get_output()
+    print(isinstance(a_status, str))
+    print(type(a_status))
+    if hasattr(a_status, '__iter__') and not isinstance(a_status, str):
+        print("ITERATING!")
+        for line in a_status:
+            print(type(line))
+            yield {"status" : line}"""
+    return {"status" : app_status}
 
 @app.get("/result/<id>")
 def result(id):

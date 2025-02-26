@@ -21,11 +21,25 @@
             </p>
             <p>
                 {{ form.input_images.label }}<br>
-                {{ form.input_images(size=1) }}<br>
+                {{ form.input_images(size=1, id="input") }}<br>
                 {% for error in form.input_images.errors %}
                 <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
+            <script>
+                const SCRIPT_ROOT = {{ request.script_root|tojson }}
+                const inputSelector = document.getElementById('input');
+                document.write("<img  id = inputimg src=static");
+                document.write(" height='300'>");
+                function updateimg(){
+                    input = inputSelector.value
+                    let newsrc = `${SCRIPT_ROOT}/static/${input}`
+                    fetch(newsrc).then(document.getElementById("inputimg").src = newsrc);
+                    console.log(newsrc)
+                }
+                updateimg()
+                document.getElementById("input").addEventListener("click", updateimg);
+            </script>
         <p>{{ form.submit() }}</p>
 
 {% endblock %}        

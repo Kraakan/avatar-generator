@@ -1,0 +1,112 @@
+Didn't makedir
+ * Serving Flask app 'flask_app'
+ * Debug mode: on
+Didn't makedir
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+[(23, 'Moved settings.json'), (22, 'Investigating 1.json'), (21, 'End-of-day test!'), (20, 'New model dir names'), (19, 'Uninterrupted tuning'), (18, 'Fiddling with app.app_context() (This is too slow)'), (17, 'opguiqbopegbn'), (16, "It's not easy to stay in touch"), (15, "I'm learning to communicate"), (14, 'readlining'), (13, 'OK, just a peek?'), (12, 'This time I will be read!'), (11, 'reading stdout'), (10, 'poll + stdout model'), (9, 'PIPED model'), (8, 'Polled model'), (7, 'Model, interrupted'), (6, 'Popen python3, -m, accelerate.commands.launch'), (5, 'Subprocess model'), (4, 'Placeholder Name'), (3, 'Placeholder Name'), (2, 'Placeholder Name'), (1, 'Placeholder Name')]
+['/input/drawsvg.svg', '/input/Nathan_Explosion.png', '/input/drawsvg.png', '/input/drawsvg2.png', '/input/drawsvg2.svg']
+ITERATING!
+ITERATING!
+ITERATING!
+[(23, 'Moved settings.json'), (22, 'Investigating 1.json'), (21, 'End-of-day test!'), (20, 'New model dir names'), (19, 'Uninterrupted tuning'), (18, 'Fiddling with app.app_context() (This is too slow)'), (17, 'opguiqbopegbn'), (16, "It's not easy to stay in touch"), (15, "I'm learning to communicate"), (14, 'readlining'), (13, 'OK, just a peek?'), (12, 'This time I will be read!'), (11, 'reading stdout'), (10, 'poll + stdout model'), (9, 'PIPED model'), (8, 'Polled model'), (7, 'Model, interrupted'), (6, 'Popen python3, -m, accelerate.commands.launch'), (5, 'Subprocess model'), (4, 'Placeholder Name'), (3, 'Placeholder Name'), (2, 'Placeholder Name'), (1, 'Placeholder Name')]
+['/input/drawsvg.svg', '/input/Nathan_Explosion.png', '/input/drawsvg.png', '/input/drawsvg2.png', '/input/drawsvg2.svg']
+<User kraakan>
+None
+None
+ITERATING!
+None
+ITERATING!
+None
+ITERATING!
+<class 'str'>
+2025-02-25_15:28:31.418348_kraakan_Mortal_Kombat_2024-08-30 11:31:22.925817.png entered
+ITERATING!
+ITERATING!
+ITERATING!
+Didn't makedir
+ * Serving Flask app 'flask_app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 583-736-217
+127.0.0.1 - - [25/Feb/2025 15:29:39] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:29:42] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:29:47] "GET /status HTTP/1.1" 200 -
+Didn't makedir
+ITERATING!
+ITERATING!
+ITERATING!
+Didn't makedir
+ * Serving Flask app 'flask_app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 583-736-217
+127.0.0.1 - - [25/Feb/2025 15:30:02] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:30:07] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:30:12] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:30:17] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:30:22] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:30:27] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:30:32] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:30:37] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:30:42] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:30:47] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:30:52] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:30:57] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:02] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:07] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:12] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:17] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:22] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:27] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:32] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:37] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:42] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:47] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:52] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:31:57] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:32:02] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:32:07] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:32:12] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:32:17] "GET /status HTTP/1.1" 200 -
+127.0.0.1 - - [25/Feb/2025 15:32:22] "GET /status HTTP/1.1" 200 -
+Didn't makedir
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!
+ITERATING!

@@ -64,7 +64,7 @@ class queue(): # TODO: re-create .json file if it's unreadable
             task_data = self.q[key]
             task_to_run = task(task_data["user"], task_data["type"], task_data["path"], task_data["prompt"], task_data["name"], task_data["command"], task_data["model_id"] or None)
             self.running = key
-            process = subprocess.Popen(task_to_run.command, stdout=subprocess.PIPE, universal_newlines=True) # TODO: Trigger process tracking thread
+            process = subprocess.Popen(task_to_run.command, stdout=subprocess.PIPE, universal_newlines=True)
             self.track_process(process)
 
     def promote_task(self, key): # TODO: create an order in the queue - possibly an "actually queued" section
@@ -95,11 +95,15 @@ class queue(): # TODO: re-create .json file if it's unreadable
         self.save_queue()
         return result
     
-    def get_output(self):
+    def get_output(self): # Have attempted to get shell output from subprocess, so far unsuccessfully
         if self.process == None:
-            return None
-        result = self.process.communicate()
-        return result
+            return "Pending"
+        else:
+            yield self.process.stdout.readline()
+        self.process.stdout.close()
+        return_code = self.process.wait()
+        if return_code:
+            raise subprocess.CalledProcessError(return_code)
     
     def get_task_entry(self, task_key):
         if task_key not in self.q.keys():

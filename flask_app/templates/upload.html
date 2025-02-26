@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
     <form method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         {{ form.photos.label }}<br>

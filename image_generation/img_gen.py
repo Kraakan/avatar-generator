@@ -30,10 +30,10 @@ model_id_or_path = "./DreamBooth/kraakan_modell"
 def main(args):
     pipe = initialize_pipe(args.pretrained_model_name_or_path) #TODO: Move code here!
 
-    input_dir = os.path.join(os.getcwd(), "../avatar-generator/flask_app/static/input/")
+    input_dir = os.path.join(os.getcwd(), "../avatar-generator/flask_app/static/")
 
     init_image = Image.open(input_dir + args.input_image).convert("RGB")
-    init_image = init_image.resize((768, 512))
+    init_image = init_image.resize((512, 512))
 
     images = pipe(prompt=args.prompt, image=init_image, strength=0.75, guidance_scale=7.5).images
 

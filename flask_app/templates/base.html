@@ -8,9 +8,20 @@ https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates -
       {% else %}
       <title>Title</title>
       {% endif %}
-      {% if status %}
-      <div>App state: {{ status }}</div>
-      {% endif %}
+      <div id="status">App state:</div>
+      <script>
+        const STATUS_URL = "{{ url_for('status') }}";
+        async function checkStatus(url) {
+            newStatus = fetch(url)
+            .then(response => response.json())
+            .then(data => {
+            // data is a parsed JSON object
+            console.log(data);
+            document.getElementById("status").innerText = data.status;
+            });
+        }
+        setInterval(checkStatus, 5000, STATUS_URL);
+      </script>
     </head>
     <body>
         <div>
@@ -19,6 +30,7 @@ https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates -
             <a href="{{ url_for('login') }}">Login</a>
             {% else %}
             <a href="{{ url_for('user') }}">User Page</a>
+            <a href="{{ url_for('upload') }}">Upload tuning images</a>
             <a href="{{ url_for('tune') }}">Tune a model</a>
             <a href="{{ url_for('generate') }}">Generate an image</a>
             <a href="{{ url_for('tasks') }}">See task queue</a></div>
