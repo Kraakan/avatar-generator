@@ -13,10 +13,10 @@
                 {% endfor %}
             </p>
             <p>
-                {{ form.promt.label }}<br>
-                {{ form.promt(size=64) }}<br>
+                {{ form.prompt.label }}<br>
+                {{ form.prompt(size=64) }}<br>
                 <p>The special prompt for your model will be prepended automatically.</p>
-                {% for error in form.promt.errors %}
+                {% for error in form.prompt.errors %}
                 <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>

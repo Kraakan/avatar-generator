@@ -18,6 +18,9 @@
 <h1>Generated images</h1>
 {% for image in generated_images %}
 <div>
+    <div>
+        <p>prompt: {{ image.prompt }}</p>
+    </div>
     <img src={{ url_for('static', filename='output/' + image.filename ) }} height="300">
     <div popover id="g{{ image.id }}"> 
         <img src={{ url_for('static', filename='output/' + image.filename ) }} height="500">

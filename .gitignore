@@ -1,6 +1,7 @@
 # User files
 flask_app/app.db
 flask_app/static
+flask_app/task_queue.json
 DreamBooth/users
 DreamBooth/models
 models

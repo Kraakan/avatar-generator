@@ -73,7 +73,7 @@ def launch_training(namespace, user, new_model_dir, prompt = "Placeholder prompt
         "output_dir": new_model_dir
     }
     from flask_app import app, db, models
-    new_model_entry = models.Model(name=name, dir=new_model_dir, user_id=user, fine_tuning_promt=prompt)
+    new_model_entry = models.Model(name=name, dir=new_model_dir, user_id=user, fine_tuning_prompt=prompt)
     db.session.add(new_model_entry)
     db.session.commit()
     return model_data

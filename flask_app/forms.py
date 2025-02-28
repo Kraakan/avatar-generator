@@ -44,7 +44,7 @@ class TuningImageForm(FlaskForm):
 class ImageGenerationForm(FlaskForm):
     models = SelectField('Model')
     input_images = SelectField('Input image')
-    promt = TextAreaField('Prompt')
+    prompt = TextAreaField('Prompt')
     submit = SubmitField('Generate')
 
 class MultiCheckboxField(SelectMultipleField):

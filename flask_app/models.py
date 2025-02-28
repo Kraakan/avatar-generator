@@ -44,7 +44,7 @@ class Model(db.Model):
                                                index=True)
     timestamp: so.Mapped[datetime] = so.mapped_column(
         index=True, default=lambda: datetime.now())
-    fine_tuning_promt: so.Mapped[str] = so.mapped_column(sa.String(64))
+    fine_tuning_prompt: so.Mapped[str] = so.mapped_column(sa.String(64))
     owner: so.Mapped['User'] = so.relationship(
         back_populates='models')
     generated_images: so.Mapped['Generated_image'] = so.relationship(
@@ -61,7 +61,7 @@ class Generated_image(db.Model):
                                                index=True)
     timestamp: so.Mapped[datetime] = so.mapped_column(
         index=True, default=lambda: datetime.now())
-    promt : so.Mapped[str] = so.mapped_column(sa.String(140))
+    prompt : so.Mapped[str] = so.mapped_column(sa.String(140))
     filename: so.Mapped[str] = so.mapped_column(sa.String(64), unique=True)
     owner: so.Mapped['User'] = so.relationship(
         back_populates='pictures')

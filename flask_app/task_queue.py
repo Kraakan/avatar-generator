@@ -37,9 +37,12 @@ class queue(): # TODO: re-create .json file if it's unreadable
         self.process = None
 
     def load_queue(self):
-        queue_file = open("flask_app/task_queue.json", "r")
-        task_queue = json.load(queue_file)
-        queue_file.close()
+        try:
+            queue_file = open("flask_app/task_queue.json", "r")
+            task_queue = json.load(queue_file)
+            queue_file.close()
+        except(FileNotFoundError):
+            task_queue = {}
         return task_queue
     
     def save_queue(self):

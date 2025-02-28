@@ -79,7 +79,7 @@ def flask_generate(model_selection = -1, initial_image_name = "Nathan_Explosion.
     from flask_app import app, db, models
     import sqlalchemy as sa
     model = db.session.scalar(sa.select(models.Model).where(models.Model.id == model_selection))
-    prompt = model.fine_tuning_promt + " " + prompt
+    prompt = model.fine_tuning_prompt + " " + prompt
     model_path = model.dir or None
     pipe = initialize_pipe(model_id_or_path = model_path)
     input_dir = os.path.join(os.getcwd(), "../avatar-generator/flask_app/static/input/")
@@ -94,14 +94,14 @@ def flask_generate(model_selection = -1, initial_image_name = "Nathan_Explosion.
     images[0].save("flask_app/static/output/" + image_name) #Not saving?
 
     #print("Entry:", "user_id =", model.user_id, "model_id =", model.id, "promt =", prompt, "filename =", image_name)
-    new_image_entry = models.Generated_image(user_id = model.user_id, model_id = model.id, promt = prompt, filename = image_name)
+    new_image_entry = models.Generated_image(user_id = model.user_id, model_id = model.id, prompt = prompt, filename = image_name)
     print(new_image_entry)
     db.session.add(new_image_entry)
     db.session.commit()
     
     return image_name
 
-def enter_promt(): #TODO: Fix or remove
+def enter_prompt(): #TODO: Fix or remove
     prompt = DreamBooth_instance_prompt + " " + input("Enter prompt: ")
 
     images = pipe(prompt=prompt, image=init_image, strength=0.75, guidance_scale=7.5).images

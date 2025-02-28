@@ -23,14 +23,14 @@ global app_status
 app_status = "Backend available"
 
 def enter_model(app, user, new_model_dir, prompt = "Placeholder prompt", name="Placeholder Name"):
-    new_model_entry = models.Model(name=name, dir=new_model_dir, user_id=user, fine_tuning_promt=prompt)
+    new_model_entry = models.Model(name=name, dir=new_model_dir, user_id=user, fine_tuning_prompt=prompt)
     db.session.add(new_model_entry)
     db.session.commit()
     queue.running = None
     print(new_model_dir, "entered")
 
 def enter_image(app, user, path, prompt, model_id):
-    new_image_entry = models.Generated_image(user_id = user, model_id = model_id, promt = prompt, filename = path)
+    new_image_entry = models.Generated_image(user_id = user, model_id = model_id, prompt = prompt, filename = path)
     db.session.add(new_image_entry)
     db.session.commit()
     queue.running = None
@@ -135,7 +135,7 @@ async def generate():
         model = db.session.scalar(sa.select(models.Model).where(models.Model.id == model_selection))
         model_path = model.dir
         username = db.session.scalar(sa.select(flask_app.models.User).where(flask_app.models.User.id == user_id)).username
-        prompt = username + " " + form.promt.data
+        prompt = username + " " + form.prompt.data
         initial_image = form.input_images.data
         #initial_image = "Nathan_Explosion.png" # TODO: Let user chose something
         split_image_name = initial_image.split(".")
@@ -167,10 +167,6 @@ async def tune():
     available_images = db.session.scalars(sa.select(flask_app.models.Tuning_image).where(flask_app.models.Tuning_image.user_id == current_user.get_id()))
     form = TuningForm()
     form.tuning_images.choices = [(i.id, i.filename) for i in available_images]
-    if form.tuning_images.data:
-        print(form.tuning_images.data)
-    else:
-        print(form.tuning_images)
     if form.validate_on_submit():
         name = form.name.data
         image_id_strings = [str(i) for i in form.tuning_images.data]
