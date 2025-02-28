@@ -1341,5 +1341,455 @@
         "status": 0,
         "model_id": 24,
         "date": "2025-02-26 11:44:10.095388"
+    },
+    "79": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:33:38.409351_kraakan_levitating_2024-08-30 11:31:22.867911.png",
+        "prompt": "kraakan levitating",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-30 11:31:22.867911.jpg",
+            "--prompt=kraakan levitating",
+            "--output_image=2025-02-28_10:33:38.409351_kraakan_levitating_2024-08-30 11:31:22.867911.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:24:16.668826"
+    },
+    "80": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:35:18.519597_kraakan_floating_in_zero_gravity_2024-08-30 11:31:22.867911.png",
+        "prompt": "kraakan floating in zero gravity",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-30 11:31:22.867911.jpg",
+            "--prompt=kraakan floating in zero gravity",
+            "--output_image=2025-02-28_10:35:18.519597_kraakan_floating_in_zero_gravity_2024-08-30 11:31:22.867911.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:35:18.519631"
+    },
+    "81": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:35:59.000834_kraakan_drifting_in_outer_space_2024-08-30 11:31:22.867911.png",
+        "prompt": "kraakan drifting in outer space",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-30 11:31:22.867911.jpg",
+            "--prompt=kraakan drifting in outer space",
+            "--output_image=2025-02-28_10:35:59.000834_kraakan_drifting_in_outer_space_2024-08-30 11:31:22.867911.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:35:59.000868"
+    },
+    "82": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:37:33.778313_kraakan_on_a_boat_2024-08-30 11:31:22.840695.png",
+        "prompt": "kraakan on a boat",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-30 11:31:22.840695.jpg",
+            "--prompt=kraakan on a boat",
+            "--output_image=2025-02-28_10:37:33.778313_kraakan_on_a_boat_2024-08-30 11:31:22.840695.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:37:33.778336"
+    },
+    "84": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:47:57.398414_kraakan_high_quality_photograph_person_looking_into_the_camera_drawsvg2.png",
+        "prompt": "kraakan high quality photograph person looking into the camera",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=input/drawsvg2.png",
+            "--prompt=kraakan high quality photograph person looking into the camera",
+            "--output_image=2025-02-28_10:47:57.398414_kraakan_high_quality_photograph_person_looking_into_the_camera_drawsvg2.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:45:41.937348"
+    },
+    "85": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:49:05.086236_kraakan_photograph_of_kraakan_listening_to_music_drawsvg.png",
+        "prompt": "kraakan photograph of kraakan listening to music",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=input/drawsvg.png",
+            "--prompt=kraakan photograph of kraakan listening to music",
+            "--output_image=2025-02-28_10:49:05.086236_kraakan_photograph_of_kraakan_listening_to_music_drawsvg.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:49:05.086285"
+    },
+    "86": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:50:26.264715_kraakan_profile_picture_in_profile_2024-08-30 11:31:22.925817.png",
+        "prompt": "kraakan profile picture in profile",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-30 11:31:22.925817.jpg",
+            "--prompt=kraakan profile picture in profile",
+            "--output_image=2025-02-28_10:50:26.264715_kraakan_profile_picture_in_profile_2024-08-30 11:31:22.925817.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:50:26.264747"
+    },
+    "87": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:51:27.269628_kraakan_cyberpunk_visor_readouts_reflected_2024-08-30 11:31:22.877342.png",
+        "prompt": "kraakan cyberpunk visor readouts reflected",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-30 11:31:22.877342.jpg",
+            "--prompt=kraakan cyberpunk visor readouts reflected",
+            "--output_image=2025-02-28_10:51:27.269628_kraakan_cyberpunk_visor_readouts_reflected_2024-08-30 11:31:22.877342.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:51:27.269645"
+    },
+    "88": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:52:35.823463_kraakan_space_pilot_in_visored_helmet_2024-08-30 11:31:22.877342.png",
+        "prompt": "kraakan space pilot in visored helmet",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-30 11:31:22.877342.jpg",
+            "--prompt=kraakan space pilot in visored helmet",
+            "--output_image=2025-02-28_10:52:35.823463_kraakan_space_pilot_in_visored_helmet_2024-08-30 11:31:22.877342.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:52:35.823484"
+    },
+    "89": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:53:12.348795_kraakan_All_your_base_are_belong_to_us_2024-08-30 11:31:22.877342.png",
+        "prompt": "kraakan All your base are belong to us",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-30 11:31:22.877342.jpg",
+            "--prompt=kraakan All your base are belong to us",
+            "--output_image=2025-02-28_10:53:12.348795_kraakan_All_your_base_are_belong_to_us_2024-08-30 11:31:22.877342.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:53:12.348821"
+    },
+    "90": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:53:58.291528_kraakan_all_your_base_are_belong_to_us_2024-08-30 11:31:22.855680.png",
+        "prompt": "kraakan all your base are belong to us",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-30 11:31:22.855680.jpg",
+            "--prompt=kraakan all your base are belong to us",
+            "--output_image=2025-02-28_10:53:58.291528_kraakan_all_your_base_are_belong_to_us_2024-08-30 11:31:22.855680.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:53:58.291556"
+    },
+    "91": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_10:54:49.094692_kraakan_prisoner_in_exercise_cage_2024-08-30 11:31:22.855680.png",
+        "prompt": "kraakan prisoner in exercise cage",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-30 11:31:22.855680.jpg",
+            "--prompt=kraakan prisoner in exercise cage",
+            "--output_image=2025-02-28_10:54:49.094692_kraakan_prisoner_in_exercise_cage_2024-08-30 11:31:22.855680.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 10:54:49.094715"
+    },
+    "93": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_11:26:38.453982_kraakan_a_warm_summer's_day_2024-08-30 11:31:22.910930.png",
+        "prompt": "kraakan a warm summer's day",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-30 11:31:22.910930.jpg",
+            "--prompt=kraakan a warm summer's day",
+            "--output_image=2025-02-28_11:26:38.453982_kraakan_a_warm_summer's_day_2024-08-30 11:31:22.910930.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 11:22:24.995988"
+    },
+    "94": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_11:34:32.869896_kraakan_normal_person_2024-08-29 17:53:58.814550.png",
+        "prompt": "kraakan normal person",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/23_kraakan",
+            "--input_image=2024-08-29 17:53:58.814550.png",
+            "--prompt=kraakan normal person",
+            "--output_image=2025-02-28_11:34:32.869896_kraakan_normal_person_2024-08-29 17:53:58.814550.png"
+        ],
+        "status": 0,
+        "model_id": 23,
+        "date": "2025-02-28 11:34:32.869926"
+    },
+    "95": {
+        "user": "1",
+        "type": "model tuning",
+        "path": "./models/25_kraakan",
+        "prompt": "kraakan",
+        "name": "no closeup",
+        "command": [
+            "python3",
+            "-m",
+            "accelerate.commands.launch",
+            "DreamBooth/train_dreambooth.py",
+            "--pretrained_model_name_or_path=./DreamBooth/models/default",
+            "--validation_steps=100",
+            "--resolution=512",
+            "--train_batch_size=1",
+            "--gradient_accumulation_steps=1",
+            "--learning_rate=5e-6",
+            "--lr_scheduler=constant",
+            "--lr_warmup_steps=0",
+            "--max_train_steps=400",
+            "--gradient_checkpointing",
+            "--use_8bit_adam",
+            "--instance_image_list=2024-08-29 17:53:58.814550.png#2024-08-30 11:31:22.840695.jpg#2024-08-30 11:31:22.855680.jpg#2024-08-30 11:31:22.867911.jpg#2024-08-30 11:31:22.910930.jpg#2024-08-30 11:31:22.919480.jpg#2024-08-30 11:31:22.925817.jpg",
+            "--output_dir=./models/25_kraakan",
+            "--instance_prompt=kraakan"
+        ],
+        "status": 1,
+        "model_id": null,
+        "date": "2025-02-28 11:43:01.474438"
+    },
+    "96": {
+        "user": "1",
+        "type": "model tuning",
+        "path": "./models/25_kraakan",
+        "prompt": "kraakan",
+        "name": "no closeup",
+        "command": [
+            "python3",
+            "-m",
+            "accelerate.commands.launch",
+            "DreamBooth/train_dreambooth.py",
+            "--pretrained_model_name_or_path=./DreamBooth/models/default",
+            "--validation_steps=100",
+            "--resolution=512",
+            "--train_batch_size=1",
+            "--gradient_accumulation_steps=1",
+            "--learning_rate=5e-6",
+            "--lr_scheduler=constant",
+            "--lr_warmup_steps=0",
+            "--max_train_steps=400",
+            "--gradient_checkpointing",
+            "--use_8bit_adam",
+            "--instance_image_list=2024-08-29 17:53:58.814550.png#2024-08-30 11:31:22.840695.jpg#2024-08-30 11:31:22.855680.jpg#2024-08-30 11:31:22.867911.jpg#2024-08-30 11:31:22.910930.jpg#2024-08-30 11:31:22.919480.jpg#2024-08-30 11:31:22.925817.jpg",
+            "--output_dir=./models/25_kraakan",
+            "--instance_prompt=kraakan"
+        ],
+        "status": 1,
+        "model_id": null,
+        "date": "2025-02-28 11:50:59.409169"
+    },
+    "97": {
+        "user": "1",
+        "type": "model tuning",
+        "path": "./models/26_kraakan",
+        "prompt": "kraakan",
+        "name": "no closeup",
+        "command": [
+            "python3",
+            "-m",
+            "accelerate.commands.launch",
+            "DreamBooth/train_dreambooth.py",
+            "--pretrained_model_name_or_path=./DreamBooth/models/default",
+            "--validation_steps=100",
+            "--resolution=512",
+            "--train_batch_size=1",
+            "--gradient_accumulation_steps=1",
+            "--learning_rate=5e-6",
+            "--lr_scheduler=constant",
+            "--lr_warmup_steps=0",
+            "--max_train_steps=400",
+            "--gradient_checkpointing",
+            "--use_8bit_adam",
+            "--instance_image_list=2024-08-29 17:53:58.814550.png#2024-08-30 11:31:22.840695.jpg#2024-08-30 11:31:22.855680.jpg#2024-08-30 11:31:22.867911.jpg#2024-08-30 11:31:22.910930.jpg#2024-08-30 11:31:22.919480.jpg#2024-08-30 11:31:22.925817.jpg",
+            "--output_dir=./models/26_kraakan",
+            "--instance_prompt=kraakan"
+        ],
+        "status": 0,
+        "model_id": null,
+        "date": "2025-02-28 11:52:21.100916"
+    },
+    "98": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_11:58:08.345001_kraakan_futuristic_programmer_2024-08-30 11:31:22.877342.png",
+        "prompt": "kraakan futuristic programmer",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-30 11:31:22.877342.jpg",
+            "--prompt=kraakan futuristic programmer",
+            "--output_image=2025-02-28_11:58:08.345001_kraakan_futuristic_programmer_2024-08-30 11:31:22.877342.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 11:58:08.345335"
+    },
+    "99": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_11:58:53.166686_kraakan_cyberpunk_hacker_2024-08-30 11:31:22.877342.png",
+        "prompt": "kraakan cyberpunk hacker",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-30 11:31:22.877342.jpg",
+            "--prompt=kraakan cyberpunk hacker",
+            "--output_image=2025-02-28_11:58:53.166686_kraakan_cyberpunk_hacker_2024-08-30 11:31:22.877342.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 11:58:53.166714"
+    },
+    "100": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_11:59:46.536413_kraakan_necronomicon_2025-02-2811:59:19.241650.png",
+        "prompt": "kraakan necronomicon",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2025-02-2811:59:19.241650.jpeg",
+            "--prompt=kraakan necronomicon",
+            "--output_image=2025-02-28_11:59:46.536413_kraakan_necronomicon_2025-02-2811:59:19.241650.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 11:59:46.536435"
+    },
+    "101": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_12:00:37.448398_kraakan_big_hoary_tome_2025-02-2811:59:19.241650.png",
+        "prompt": "kraakan big hoary tome",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2025-02-2811:59:19.241650.jpeg",
+            "--prompt=kraakan big hoary tome",
+            "--output_image=2025-02-28_12:00:37.448398_kraakan_big_hoary_tome_2025-02-2811:59:19.241650.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 12:00:37.448432"
+    },
+    "102": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_12:01:27.118942_kraakan_quake_skin_2025-02-2811:59:19.241650.png",
+        "prompt": "kraakan quake skin",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2025-02-2811:59:19.241650.jpeg",
+            "--prompt=kraakan quake skin",
+            "--output_image=2025-02-28_12:01:27.118942_kraakan_quake_skin_2025-02-2811:59:19.241650.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 12:01:27.118958"
+    },
+    "103": {
+        "user": "2",
+        "type": "image generation",
+        "path": "2025-02-28_12:02:14.614777_kroko_avatar_Nathan_Explosion.png",
+        "prompt": "kroko avatar",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/24_kroko",
+            "--input_image=/input/Nathan_Explosion.png",
+            "--prompt=kroko avatar",
+            "--output_image=2025-02-28_12:02:14.614777_kroko_avatar_Nathan_Explosion.png"
+        ],
+        "status": 0,
+        "model_id": 24,
+        "date": "2025-02-28 12:02:14.614799"
     }
 }

@@ -4,6 +4,7 @@
     {% if message %}
     <p>{{ message }}</p>
     {% endif %}
+    <!--TODO: Instrubctions for user -->
     <form method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         {{ form.photos.label }}<br>

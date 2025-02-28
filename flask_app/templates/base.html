@@ -8,7 +8,7 @@ https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates -
       {% else %}
       <title>Title</title>
       {% endif %}
-      <div id="status">App state:</div>
+      <div id="status"></div>
       <script>
         const STATUS_URL = "{{ url_for('status') }}";
         async function checkStatus(url) {
@@ -20,7 +20,8 @@ https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates -
             document.getElementById("status").innerText = data.status;
             });
         }
-        setInterval(checkStatus, 5000, STATUS_URL);
+        checkStatus(STATUS_URL);
+        setInterval(checkStatus, 2500, STATUS_URL);
       </script>
     </head>
     <body>

@@ -18,7 +18,7 @@ login.login_view = 'login'
 try:
     os.makedirs(app.instance_path)
 except OSError:
-    print("Didn't makedir")
+    #print("Didn't makedir")
     pass
 
 app.config.from_mapping(
