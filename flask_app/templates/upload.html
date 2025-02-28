@@ -4,7 +4,18 @@
     {% if message %}
     <p>{{ message }}</p>
     {% endif %}
-    <!--TODO: Instrubctions for user -->
+    
+    {#TODO: Instrubctions for user: 
+        Describe process #}
+    <div>
+        Images will serve two funtions: 1. As material for fine tuning an image generation model 2. As input for image generation.
+        <br>
+        For the tuning images, try to find at least 4 images of yourself. Ideally, there should be some variety in terms of angle, 
+        lighting etc, but your whole face should be visible in all the images.
+        <br>
+        For the input images, you may want to experiment and take note of how the choice of input image influences things like composition and colours in the generated image.
+        <br>
+    </div>
     <form method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         {{ form.photos.label }}<br>

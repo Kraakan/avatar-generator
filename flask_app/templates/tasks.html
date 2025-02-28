@@ -15,7 +15,14 @@ Come back later
         {% if message  %}
         <div>{{ message[0]["type"] }} task {{ message[1] }}</div>
         {% endif %}
-
+<div>
+    All the tasks you send to the backend will show up here. It can only perform one task at a time, 
+    so any tasks you create while the line at the top of your screen reads 'busy' will have to be started from here once the backend is 'available' again.
+    <br>
+    You can also re-run image generation tasks that have already been completed, to see if you might get a different result by chance.
+    <br>
+    To remove an item from the task-queue, click cancel/remove
+</div>
 {% if queue  %}
     {% for key, task in reversed(queue.items()) %}
         {% if current_user.id|string == task["user"] %} {# Only show tasks created by current user #}

@@ -11,13 +11,20 @@ https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates -
       <div id="status"></div>
       <script>
         const STATUS_URL = "{{ url_for('status') }}";
+        const status_div = document.getElementById("status");
         async function checkStatus(url) {
             newStatus = fetch(url)
             .then(response => response.json())
             .then(data => {
             // data is a parsed JSON object
             console.log(data);
-            document.getElementById("status").innerText = data.status;
+            status_div.innerText = data.status;
+            if (data.status == "Backend busy"){
+                status_div.style.color = "red";
+            }
+            else if (data.status == "Backend available"){
+                status_div.style.color = "green";
+            }
             });
         }
         checkStatus(STATUS_URL);
@@ -31,7 +38,7 @@ https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates -
             <a href="{{ url_for('login') }}">Login</a>
             {% else %}
             <a href="{{ url_for('user') }}">User Page</a>
-            <a href="{{ url_for('upload') }}">Upload tuning images</a>
+            <a href="{{ url_for('upload') }}">Upload images</a>
             <a href="{{ url_for('tune') }}">Tune a model</a>
             <a href="{{ url_for('generate') }}">Generate an image</a>
             <a href="{{ url_for('tasks') }}">See task queue</a></div>

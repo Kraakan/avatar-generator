@@ -1791,5 +1791,185 @@
         "status": 0,
         "model_id": 24,
         "date": "2025-02-28 12:02:14.614799"
+    },
+    "104": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_13:20:06.368683_kraakan_a_professional_portrait_on_a_CV_2024-08-29 17:53:58.814550.png",
+        "prompt": "kraakan a professional portrait on a CV",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-29 17:53:58.814550.png",
+            "--prompt=kraakan a professional portrait on a CV",
+            "--output_image=2025-02-28_13:20:06.368683_kraakan_a_professional_portrait_on_a_CV_2024-08-29 17:53:58.814550.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 13:16:35.383074"
+    },
+    "105": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_13:19:42.500228_kraakan_a_professional_portrait_on_a_CV_long_hair_brown_eyes_2024-08-29 17:53:58.814550.png",
+        "prompt": "kraakan a professional portrait on a CV long hair brown eyes",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-29 17:53:58.814550.png",
+            "--prompt=kraakan a professional portrait on a CV long hair brown eyes",
+            "--output_image=2025-02-28_13:19:42.500228_kraakan_a_professional_portrait_on_a_CV_long_hair_brown_eyes_2024-08-29 17:53:58.814550.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 13:17:28.621851"
+    },
+    "106": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_13:19:16.943285_kraakan_a_professional_portrait_on_a_CV_Finnish_long_hair_brown_eyes_2024-08-29 17:53:58.814550.png",
+        "prompt": "kraakan a professional portrait on a CV Finnish long hair brown eyes",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-29 17:53:58.814550.png",
+            "--prompt=kraakan a professional portrait on a CV Finnish long hair brown eyes",
+            "--output_image=2025-02-28_13:19:16.943285_kraakan_a_professional_portrait_on_a_CV_Finnish_long_hair_brown_eyes_2024-08-29 17:53:58.814550.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 13:18:28.391638"
+    },
+    "107": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_13:32:25.639893_kraakan_praise_the_sun_2024-08-30 11:31:22.855680.png",
+        "prompt": "kraakan praise the sun",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-30 11:31:22.855680.jpg",
+            "--prompt=kraakan praise the sun",
+            "--output_image=2025-02-28_13:32:25.639893_kraakan_praise_the_sun_2024-08-30 11:31:22.855680.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 13:32:25.639911"
+    },
+    "108": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_13:37:03.694000_kraakan_dark_souls_2024-08-30 11:31:22.840695.png",
+        "prompt": "kraakan dark souls",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-30 11:31:22.840695.jpg",
+            "--prompt=kraakan dark souls",
+            "--output_image=2025-02-28_13:37:03.694000_kraakan_dark_souls_2024-08-30 11:31:22.840695.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 13:35:50.459298"
+    },
+    "109": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_13:42:20.588527_kraakan_dark_souls_2024-08-30 11:31:22.855680.png",
+        "prompt": "kraakan dark souls",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-30 11:31:22.855680.jpg",
+            "--prompt=kraakan dark souls",
+            "--output_image=2025-02-28_13:42:20.588527_kraakan_dark_souls_2024-08-30 11:31:22.855680.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 13:40:28.731336"
+    },
+    "110": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_13:44:16.999930_kraakan_dark_souls_2024-08-30 11:31:22.919480.png",
+        "prompt": "kraakan dark souls",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-30 11:31:22.919480.jpg",
+            "--prompt=kraakan dark souls",
+            "--output_image=2025-02-28_13:44:16.999930_kraakan_dark_souls_2024-08-30 11:31:22.919480.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 13:43:53.620394"
+    },
+    "111": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_13:46:20.545251_kraakan_dark_souls_2024-08-30 11:31:22.867911.png",
+        "prompt": "kraakan dark souls",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-30 11:31:22.867911.jpg",
+            "--prompt=kraakan dark souls",
+            "--output_image=2025-02-28_13:46:20.545251_kraakan_dark_souls_2024-08-30 11:31:22.867911.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 13:45:39.649021"
+    },
+    "112": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_13:47:23.953481_kraakan_Nathan_Explosion_2024-08-30 11:31:22.867911.png",
+        "prompt": "kraakan Nathan Explosion",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-30 11:31:22.867911.jpg",
+            "--prompt=kraakan Nathan Explosion",
+            "--output_image=2025-02-28_13:47:23.953481_kraakan_Nathan_Explosion_2024-08-30 11:31:22.867911.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 13:46:44.562692"
+    },
+    "113": {
+        "user": "1",
+        "type": "image generation",
+        "path": "2025-02-28_13:48:18.612084_kraakan_twin_peaks_2024-08-29 17:53:58.814550.png",
+        "prompt": "kraakan twin peaks",
+        "name": "Placeholder Name",
+        "command": [
+            "python3",
+            "image_generation/img_gen.py",
+            "--pretrained_model_name_or_path=./models/26_kraakan",
+            "--input_image=2024-08-29 17:53:58.814550.png",
+            "--prompt=kraakan twin peaks",
+            "--output_image=2025-02-28_13:48:18.612084_kraakan_twin_peaks_2024-08-29 17:53:58.814550.png"
+        ],
+        "status": 0,
+        "model_id": 25,
+        "date": "2025-02-28 13:48:18.612176"
     }
 }

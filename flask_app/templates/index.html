@@ -5,6 +5,17 @@
         <h1>Howdy stranger!</h1>
     {% else %}
         <h1>Hello, {{ current_user.username }}!</h1>
+        {#TODO: Instrubctions for user: 
+            Describe process #}
+        <div>
+            To generate your own avatar image, start by uploading a few images of your own. They will be used to fine tune the image generation model 
+            and/or as input images for the generateion itself.
+            <br>
+            Once you have uploaded a few images, you can try fine tuning a model with them.
+            <br>
+            Finally, once you have fine tuned a model you can use it to genereate images.
+            <br>
+            Keep in mind that you may need to try several combinations of different fine tunings, input images and prompts to generate a picture you like.
+        </div>
     {% endif %}
-     <!--TODO: Instrubctions for user: Describe process -->
 {% endblock %}
