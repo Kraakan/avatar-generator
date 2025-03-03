@@ -16,10 +16,14 @@
         For the input images, you may want to experiment and take note of how the choice of input image influences things like composition and colours in the generated image.
         <br>
     </div>
-    <form method="POST" enctype="multipart/form-data">
+    <form id="uploadform" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         {{ form.photos.label }}<br>
-        {{ form.photos(size=64) }}<br>
-        <p>{{ form.submit() }}</p>
+        {{ form.photos(size=64, id="files") }}<br>
     </form>
+    <script>
+        document.getElementById("files").onchange = function() {
+    document.getElementById("uploadform").submit();
+};
+    </script>
 {% endblock %}

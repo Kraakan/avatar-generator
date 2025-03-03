@@ -4,6 +4,38 @@ import flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_app import task_queue
+import json
+
+#TODO: On startup, check DreamBooth/models dir and DreamBooth/settings.json
+model_dirs = os.listdir('DreamBooth/models')
+settings_file = open("DreamBooth/settings.json", "r")
+settings = json.load(settings_file)
+default_model_path = settings["pretrained_model_name_or_path"]
+settings_file.close()
+default_model = default_model_path.split("/")[-1]
+if default_model not in model_dirs:
+    if len(model_dirs) > 0:
+        model_selection = None
+        while model_selection == None:
+            print("Default model", default_model, "not found, use one of the ones listed below?")
+            for i, m in enumerate(model_dirs):
+                print(i, m)
+            model_selection = int(input("Enter the index of the model you would like to use as a base."))
+            if model_selection < len(model_dirs):
+                print(model_dirs[model_selection])
+                if input("Use this model? y/n ") == 'y':
+                    new_default_model = model_dirs[model_selection]
+                else: model_selection = None
+            else: model_selection = None
+        new_default_model_path = "/".join("DreamBooth/models".split("/") + [new_default_model])
+        print(new_default_model_path)
+        settings["pretrained_model_name_or_path"] = new_default_model_path
+        settings_file = open("DreamBooth/settings.json", "w")
+        json.dump(settings, settings_file, indent=4)
+        settings_file.close()
+    else:
+        print("No folders found in DreamBooth/models. Please donload a base model and extract any .safetensor files before running the app.")
+
 
 # create and configure the app
 basedir = os.path.abspath(os.path.dirname(__file__))
