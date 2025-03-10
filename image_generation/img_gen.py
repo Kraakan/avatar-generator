@@ -31,10 +31,10 @@ input_dir = os.path.join(os.getcwd(), "../avatar-generator/flask_app/static/")
 dir_content = os.listdir(input_dir)
 if 'input' not in dir_content:
     # create input dir
-    os.mkdir('input')
+    os.mkdir(input_dir + 'input')
 if 'output' not in dir_content:
     # create input dir
-    os.mkdir('output')
+    os.mkdir(input_dir + 'output')
 
 def main(args):
     pipe = initialize_pipe(args.pretrained_model_name_or_path) #TODO: Move code here!
