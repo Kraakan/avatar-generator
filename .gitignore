@@ -4,9 +4,9 @@ flask_app/static
 flask_app/task_queue.json
 DreamBooth/users
 DreamBooth/models
-models
 DreamBooth/kraakan_modell
 image_generation/kraakan_modell_3
+flask_app/task_queue.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

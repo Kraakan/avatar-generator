@@ -27,17 +27,19 @@ import argparse
 DreamBooth_instance_prompt="kraakan"
 model_id_or_path = "./DreamBooth/kraakan_modell"
 
+input_dir = os.path.join(os.getcwd(), "../avatar-generator/flask_app/static/")
+dir_content = os.listdir(input_dir)
+if 'input' not in dir_content:
+    # create input dir
+    os.mkdir('input')
+if 'output' not in dir_content:
+    # create input dir
+    os.mkdir('output')
+
 def main(args):
     pipe = initialize_pipe(args.pretrained_model_name_or_path) #TODO: Move code here!
 
-    input_dir = os.path.join(os.getcwd(), "../avatar-generator/flask_app/static/")
-    dir_content = os.listdir(input_dir)
-    if 'input' not in dir_content:
-        # create input dir
-        os.mkdir('input')
-    if 'output' not in dir_content:
-        # create input dir
-        os.mkdir('output')
+
 
     init_image = Image.open(input_dir + args.input_image).convert("RGB")
     init_image = init_image.resize((512, 512))
