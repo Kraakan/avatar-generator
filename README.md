@@ -24,7 +24,7 @@ In-house app for creating user avatars using Stable Diffusion
 
 ## If you downloaded a .safetensors file:
 `cd ..`  
-`python3 save_model.py --safetensors_file="./models/v1-5-pruned-emaonly.safetensors" --output_dir="./models/v1-5-pruned-emaonly"`
+`python3 save_model.py --safetensors_file="./models/v1-5-pruned-emaonly.safetensors" --output_dir="./models/default"`  
 `cd ..`  
 
 ## To run (make sure you are in the avatar-generator directory)

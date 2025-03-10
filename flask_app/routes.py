@@ -178,9 +178,10 @@ async def tune():
         dir_list = os.listdir('models')
         new_i = 0
         for d in dir_list:
-            d_i = int(d.split('_')[0])
-            if d_i >= new_i:
-                new_i = d_i + 1
+            if d[0] != ".":
+                d_i = int(d.split('_')[0])
+                if d_i >= new_i:
+                    new_i = d_i + 1
         new_model_dir = "./models/" + str(new_i) # This caused an error: (sqlite3.IntegrityError) UNIQUE constraint failed: model.dir
         new_model_dir = new_model_dir + "_" + username
         command = dreambooth.get_command(user, image_filenames, new_model_dir, prompt=username)
