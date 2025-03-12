@@ -3,13 +3,14 @@ https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates -
 <!doctype html>
 <html>
     <head>
-      {% if title %}
-      <title>{{ title }}</title>
-      {% else %}
-      <title>Title</title>
-      {% endif %}
-      <div id="status"></div>
-      <script>
+    <link rel="stylesheet" href={{ url_for('static', filename= "styles.css" ) }}>
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Title</title>
+    {% endif %}
+    <div id="status"></div>
+    <script>
         const STATUS_URL = "{{ url_for('status') }}";
         const status_div = document.getElementById("status");
         async function checkStatus(url) {
@@ -29,7 +30,7 @@ https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates -
         }
         checkStatus(STATUS_URL);
         setInterval(checkStatus, 2500, STATUS_URL);
-      </script>
+    </script>
     </head>
     <body>
         <div>
