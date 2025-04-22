@@ -28,7 +28,7 @@ In-house app for creating user avatars using Stable Diffusion
 `cd ..`  
 
 ## To run (make sure you are in the avatar-generator directory)
-`flask –app flask_app run`  
+`flask --app flask_app run`  
 
 ## To serve the app over local network
 `flask --app flask_app run --host=0.0.0.0`
