@@ -36,15 +36,16 @@ if 'output' not in dir_content:
     # create input dir
     os.mkdir(input_dir + 'output')
 
-def main(args):
-    pipe = initialize_pipe(args.pretrained_model_name_or_path) #TODO: Move code here!
+def main(args, negative_prompt = "low quality, blurry, unfinished"):
+    pipe = initialize_pipe(args.pretrained_model_name_or_path)
 
-
+    if negative_prompt in args:
+        negative_prompt = args.negative_prompt
 
     init_image = Image.open(input_dir + args.input_image).convert("RGB")
     init_image = init_image.resize((512, 512))
 
-    images = pipe(prompt=args.prompt, image=init_image, strength=0.75, guidance_scale=7.5).images
+    images = pipe(prompt=args.prompt, image=init_image, strength=0.75, guidance_scale=7.5, negative_prompt=negative_prompt).images
 
     
     image_name = args.output_image
@@ -84,7 +85,7 @@ def select_image(initial_image, image_folder):
     init_image = init_image.resize((768, 512))
 
 
-def flask_generate(model_selection = -1, initial_image_name = "Nathan_Explosion.png", prompt = "kraakan person"):
+def flask_generate(model_selection = -1, initial_image_name = "Nathan_Explosion.png", prompt = "kraakan person", negative_prompt = "low quality, blurry, unfinished"):
     from flask_app import app, db, models
     import sqlalchemy as sa
     model = db.session.scalar(sa.select(models.Model).where(models.Model.id == model_selection))
@@ -96,7 +97,7 @@ def flask_generate(model_selection = -1, initial_image_name = "Nathan_Explosion.
     init_image = Image.open(input_dir + initial_image_name).convert("RGB")
     init_image = init_image.resize((768, 512))
 
-    images = pipe(prompt=prompt, image=init_image, strength=0.75, guidance_scale=7.5).images
+    images = pipe(prompt=prompt, image=init_image, strength=0.75, guidance_scale=7.5, negative_prompt=negative_prompt).images
 
     initial_image_name = initial_image_name.split(".")[0]
     image_name ='_'.join(str(datetime.datetime.now()).split()) + "_" + '_'.join(prompt.split()) + "_" + initial_image_name + ".png"
@@ -170,15 +171,21 @@ def parse_args(input_args=None): # TODO: Parse the args!
         required=True,
         help="Path to new image file.",
     )
+    parser.add_argument(
+        "--negative_prompt",
+        nargs="+",
+        help="Negative prompt")
     if input_args is not None:
         args = parser.parse_args(input_args)
     else:
         args = parser.parse_args()
     return args
 
-def get_command(model_path, input_image, prompt, output_image):
+def get_command(model_path, input_image, prompt, output_image, negative_prompt):
     command = ["python3", "image_generation/img_gen.py", "--pretrained_model_name_or_path=" + model_path, "--input_image=" + 
                input_image, "--prompt=" + prompt, "--output_image=" + output_image]
+    if len(negative_prompt) > 0:
+        command.append("--negative_prompt=" + negative_prompt)
     return command
 
 if __name__ == "__main__": # This will be ran from the queue with subprocess.Popen()

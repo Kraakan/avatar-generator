@@ -41,6 +41,8 @@
                 updateimg()
                 document.getElementById("input").addEventListener("click", updateimg);
             </script>
+        <p>Negative prompt (things you don't want): </p>
+        <p>{{form.negativeprompt}}</p>
         <p>{{ form.submit() }}</p>
 
 {% endblock %}        

@@ -45,6 +45,7 @@ class ImageGenerationForm(FlaskForm):
     models = SelectField('Model')
     input_images = SelectField('Input image')
     prompt = TextAreaField('Prompt')
+    negativeprompt = TextAreaField('Negative Prompt', default="low quality, blurry, unfinished")
     submit = SubmitField('Generate')
 
 class MultiCheckboxField(SelectMultipleField):

@@ -136,8 +136,8 @@ async def generate():
         model_path = model.dir
         username = db.session.scalar(sa.select(flask_app.models.User).where(flask_app.models.User.id == user_id)).username
         prompt = username + " " + form.prompt.data
+        negative_prompt = form.negativeprompt.data
         initial_image = form.input_images.data
-        #initial_image = "Nathan_Explosion.png" # TODO: Let user chose something
         split_image_name = initial_image.split(".")
         extension = split_image_name[-1]
         initial_image_name = ".".join(split_image_name[:-1])    
@@ -149,7 +149,7 @@ async def generate():
             svg2png(bytestring=svg,write_to='flask_app/static/' + png_image_name)
             initial_image = png_image_name
         new_image_name ='_'.join(str(datetime.datetime.now()).split()) + "_" + '_'.join(prompt.split()) + "_" + initial_image_name + ".png"
-        command = img_gen.get_command(model_path, initial_image, prompt, new_image_name)
+        command = img_gen.get_command(model_path, initial_image, prompt, new_image_name, negative_prompt)
         if model_selection != -1:
             task = queue.queue_task(user_id, "image generation", new_image_name, prompt=prompt, command=command, model_id=model_selection)
             # TODO: Don't start process checker unless task is actually launched.
